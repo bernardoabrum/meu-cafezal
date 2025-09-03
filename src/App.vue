@@ -1,14 +1,14 @@
 <template>
   <h1>App</h1>
-  <Maps />
+  <Demarcate />
 </template>
 
 <script>
-import { Maps } from "./components";
+import { Demarcate } from "./pages";
 
 export default {
   name: "App",
-  components: { Maps },
+  components: { Demarcate },
 };
 </script>
 

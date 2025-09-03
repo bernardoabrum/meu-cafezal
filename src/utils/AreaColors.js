@@ -1,4 +1,4 @@
-export const polygonColors = [
+export const AreaColors = [
   "#FF5733",
   "#33FF57",
   "#3357FF",
