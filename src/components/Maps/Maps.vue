@@ -9,7 +9,7 @@
       map-type-id="hybrid"
       :libraries="['drawing', 'geometry']"
     />
-    <Modal v-if="showModal" @confirm="confirmArea" />
+    <Modal v-if="showModal" @confirm="confirmArea" @delete="deleteArea" />
   </div>
 </template>
 
@@ -97,8 +97,7 @@ const loadAreas = async (mapInstance) => {
       polygon.setMap(mapInstance);
 
       google.maps.event.addListener(polygon, "click", () => {
-        console.log("ID da área clicada:", savedArea.id);
-        console.log("Tamanho da área clicada:", savedArea.areaSize);
+        console.log("Área clicada:", savedArea.id);
       });
     });
   } catch (err) {
@@ -116,6 +115,12 @@ const confirmArea = () => {
     })),
     areaSize,
   });
+  showModal.value = false;
+  currentArea.value = null;
+};
+
+const deleteArea = () => {
+  currentArea.value.setMap(null);
   showModal.value = false;
   currentArea.value = null;
 };

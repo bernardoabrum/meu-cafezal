@@ -4,7 +4,7 @@
     <div>
       <button @click="$emit('confirm')">Confirm</button>
       <button @click="$emit('delete')">Delete</button>
-      <button @click="$emit('edit')">Edit</button>
+      <!-- <button @click="$emit('edit')">Edit</button> -->
     </div>
   </div>
 </template>
