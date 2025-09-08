@@ -9,6 +9,7 @@
       map-type-id="hybrid"
       :libraries="['drawing', 'geometry']"
     />
+    <Modal v-if="showModal" @confirm="confirmArea" />
   </div>
 </template>
 
@@ -18,11 +19,13 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { AreaColors } from "@/utils/AreaColors";
+import Modal from "../Modal/Modal.vue";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
 const googleMap = ref(null);
 const showModal = ref(false);
+const currentArea = ref(null);
 
 onMounted(() => {
   if (navigator.geolocation) {
@@ -63,17 +66,8 @@ const configMaps = (mapInstance) => {
   google.maps.event.addListener(drawingManager, "overlaycomplete", (event) => {
     setAreaColors(event.overlay);
     drawingManager.setDrawingMode(null);
+    currentArea.value = event.overlay;
     showModal.value = true;
-    const path = event.overlay.getPath().getArray();
-    const areaSize = computeArea(path);
-    const area = event.overlay.getPath().getArray();
-    axios.post("http://localhost:3000/areas", {
-      area: area.map((point) => ({
-        lat: point.lat(),
-        lng: point.lng(),
-      })),
-      areaSize,
-    });
   });
 };
 
@@ -110,5 +104,19 @@ const loadAreas = async (mapInstance) => {
   } catch (err) {
     console.error("Erro ao carregar áreas:", err);
   }
+};
+
+const confirmArea = () => {
+  const path = currentArea.value.getPath().getArray();
+  const areaSize = computeArea(path);
+  axios.post("http://localhost:3000/areas", {
+    area: path.map((point) => ({
+      lat: point.lat(),
+      lng: point.lng(),
+    })),
+    areaSize,
+  });
+  showModal.value = false;
+  currentArea.value = null;
 };
 </script>

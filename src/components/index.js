@@ -1,4 +1,4 @@
 import Maps from "./Maps/Maps.vue";
-import ModalConfirm from "./ModalConfirm/ModalConfirm.vue";
+import Modal from "./Modal/Modal.vue";
 
-export { Maps, ModalConfirm };
+export { Maps, Modal };
