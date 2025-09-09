@@ -98,7 +98,7 @@ const loadAreas = async (mapInstance) => {
       polygon.setMap(mapInstance);
 
       google.maps.event.addListener(polygon, "click", () => {
-        console.log("Área clicada:", savedArea.id);
+        console.log("Tamanho da área:", savedArea.areaSize);
       });
     });
   } catch (err) {
@@ -128,5 +128,6 @@ const deleteArea = () => {
   currentArea.value.setMap(null);
   showModal.value = false;
   currentArea.value = null;
+  window.location.reload();
 };
 </script>
