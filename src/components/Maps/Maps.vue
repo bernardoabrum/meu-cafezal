@@ -81,6 +81,7 @@ const setAreaColors = (overlay) => {
     strokeWeight: 2,
   });
 };
+
 const computeArea = (path) => {
   return google.maps.geometry.spherical.computeArea(path);
 };
@@ -108,13 +109,17 @@ const loadAreas = async (mapInstance) => {
 const confirmArea = () => {
   const path = currentArea.value.getPath().getArray();
   const areaSize = computeArea(path);
-  axios.post("http://localhost:3000/areas", {
-    area: path.map((point) => ({
-      lat: point.lat(),
-      lng: point.lng(),
-    })),
-    areaSize,
-  });
+  try {
+    axios.post("http://localhost:3000/areas", {
+      area: path.map((point) => ({
+        lat: point.lat(),
+        lng: point.lng(),
+      })),
+      areaSize,
+    });
+  } catch (err) {
+    console.error("Erro ao salvar área:", err);
+  }
   showModal.value = false;
   currentArea.value = null;
 };
