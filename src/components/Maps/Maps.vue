@@ -1,5 +1,5 @@
 <template>
-  <div class="maps-container">
+  <div class="cmp-maps">
     <GoogleMap
       ref="googleMap"
       :api-key="VITE_GOOGLE_MAPS_API_KEY"
@@ -43,7 +43,7 @@ onMounted(() => {
 
     loadAreas(mapInstance);
     configMaps(mapInstance);
-  }, 500);
+  }, 100);
 });
 
 const configMaps = (mapInstance) => {

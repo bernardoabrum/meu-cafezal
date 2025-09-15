@@ -1,15 +1,16 @@
 <template>
   <h1>App</h1>
   <Demarcate />
+  <FieldStats v-if="openModalInfo" />
 </template>
 
-<script>
+<script setup>
+import { computed } from "vue";
+import store from "../store";
 import { Demarcate } from "./pages";
+import { FieldStats } from "./components";
 
-export default {
-  name: "App",
-  components: { Demarcate },
-};
+const openModalInfo = computed(() => store.state.openFieldStats);
 </script>
 
 <style>
@@ -20,5 +21,6 @@ body,
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
 }
 </style>
