@@ -1,5 +1,5 @@
 <template>
-  <div class="cmp-modal">
+  <div class="cmp-modal-confirm">
     <h3>Are you sure?</h3>
     <div>
       <button @click="$emit('confirm')">Confirm</button>
@@ -9,5 +9,5 @@
 </template>
 
 <script setup>
-import "./Modal.scss";
+import "./ModalConfirm.scss";
 </script>

@@ -9,7 +9,11 @@
       map-type-id="hybrid"
       :libraries="['drawing', 'geometry']"
     />
-    <Modal v-if="showModal" @confirm="confirmArea" @delete="deleteArea" />
+    <ModalConfirm
+      v-if="showModal"
+      @confirm="confirmArea"
+      @delete="deleteArea"
+    />
   </div>
 </template>
 
@@ -19,7 +23,7 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { AreaColors } from "@/utils/AreaColors";
-import Modal from "../Modal/Modal.vue";
+import { ModalConfirm } from "@/components";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)

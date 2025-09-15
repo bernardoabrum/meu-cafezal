@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 
 const store = createStore({
   state: {
-    openFieldStats: true,
+    openFieldStats: false,
   },
   mutations: {
     setOpenFieldStats(state, value) {

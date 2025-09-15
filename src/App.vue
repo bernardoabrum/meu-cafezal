@@ -7,8 +7,8 @@
 <script setup>
 import { computed } from "vue";
 import store from "../store";
-import { Demarcate } from "./pages";
-import { FieldStats } from "./components";
+import { Demarcate } from "@/pages";
+import { FieldStats } from "@/components";
 
 const openModalInfo = computed(() => store.state.openFieldStats);
 </script>
