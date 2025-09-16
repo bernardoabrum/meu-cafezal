@@ -15,6 +15,7 @@
       <div class="input-container">
         <input type="text" placeholder="Digite o nome da área" />
       </div>
+      <button @click="closeStats">Fechar</button>
     </div>
   </div>
 </template>
@@ -22,6 +23,12 @@
 <script setup>
 import "./FieldStats.scss";
 import { ref } from "vue";
+import { useStore } from "@/store";
+const { setOpenFieldStats } = useStore();
 
 const areaType = ref("property");
+
+const closeStats = () => {
+  setOpenFieldStats(false);
+};
 </script>

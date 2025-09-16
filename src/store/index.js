@@ -17,4 +17,11 @@ const store = createStore({
   },
 });
 
+export const useStore = () => {
+  const setOpenFieldStats = (value) => store.commit("setOpenFieldStats", value);
+  const getOpenFieldStats = () => store.state.openFieldStats;
+
+  return { setOpenFieldStats, getOpenFieldStats };
+};
+
 export default store;

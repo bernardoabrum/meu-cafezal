@@ -24,12 +24,14 @@ import { ref, onMounted } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { AreaColors } from "@/utils/AreaColors";
 import { ModalConfirm } from "@/components";
+import { useStore } from "@/store";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
 const googleMap = ref(null);
 const showModal = ref(false);
 const currentArea = ref(null);
+const { setOpenFieldStats } = useStore();
 
 onMounted(() => {
   if (navigator.geolocation) {
@@ -102,7 +104,8 @@ const loadAreas = async (mapInstance) => {
       polygon.setMap(mapInstance);
 
       google.maps.event.addListener(polygon, "click", () => {
-        console.log("Tamanho da área:", savedArea.areaSize);
+        console.log("ID Área:", savedArea.id);
+        setOpenFieldStats(true);
       });
     });
   } catch (err) {
