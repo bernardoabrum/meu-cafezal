@@ -18,19 +18,12 @@ const store = createStore({
     },
   },
   actions: {
-    async saveSelectedArea({ commit, state }, { areaType, areaName }) {
+    async saveSelectedArea({ state, commit }, payload) {
       try {
-        const updatedArea = {
-          ...state.selectedArea,
-          areaType,
-          areaName,
-        };
+        const id = state.selectedArea.id;
+        await axios.patch(`http://localhost:3000/areas/${id}`, payload);
 
-        await axios.put(
-          `http://localhost:3000/areas/${updatedArea.id}`,
-          updatedArea
-        );
-        commit("setSelectedArea", updatedArea);
+        commit("updateSelectedAreaInfo", payload);
       } catch (err) {
         console.error("Erro ao salvar informações da área:", err);
       }
@@ -51,8 +44,8 @@ export const useStore = () => {
   const getOpenFieldStats = () => store.state.openFieldStats;
   const setSelectedArea = (area) => store.commit("setSelectedArea", area);
   const getSelectedArea = () => store.state.selectedArea;
-  const saveSelectedArea = (areaType, areaName) =>
-    store.dispatch("saveSelectedArea", { areaType, areaName });
+  const saveSelectedArea = (payload) =>
+    store.dispatch("saveSelectedArea", payload);
 
   return {
     setOpenFieldStats,
