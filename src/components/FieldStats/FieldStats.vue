@@ -37,7 +37,14 @@ const areaType = ref("property");
 const areaName = ref("");
 
 onMounted(() => {
-  console.log(getSelectedArea());
+  const selected = getSelectedArea();
+
+  if (selected?.areaType) {
+    areaType.value = selected.areaType;
+  }
+  if (selected?.areaName) {
+    areaName.value = selected.areaName;
+  }
 });
 
 const closeStats = () => {
