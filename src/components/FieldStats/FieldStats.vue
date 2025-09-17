@@ -13,22 +13,39 @@
         </div>
       </div>
       <div class="input-container">
-        <input type="text" placeholder="Digite o nome da área" />
+        <input
+          type="text"
+          v-model="areaName"
+          placeholder="Digite o nome da área"
+        />
       </div>
-      <button @click="closeStats">Fechar</button>
+      <div class="button-container">
+        <button @click="closeStats">Fechar</button>
+        <button @click="saveStats">Salvar</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import "./FieldStats.scss";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from "@/store";
-const { setOpenFieldStats } = useStore();
+const { setOpenFieldStats, saveSelectedArea, getSelectedArea } = useStore();
 
 const areaType = ref("property");
+const areaName = ref("");
+
+onMounted(() => {
+  console.log(getSelectedArea());
+});
 
 const closeStats = () => {
+  setOpenFieldStats(false);
+};
+
+const saveStats = () => {
+  saveSelectedArea(areaType.value, areaName.value);
   setOpenFieldStats(false);
 };
 </script>

@@ -31,7 +31,7 @@ const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrã
 const googleMap = ref(null);
 const showModal = ref(false);
 const currentArea = ref(null);
-const { setOpenFieldStats } = useStore();
+const { setOpenFieldStats, setSelectedArea, getSelectedArea } = useStore();
 
 onMounted(() => {
   if (navigator.geolocation) {
@@ -95,16 +95,22 @@ const computeArea = (path) => {
 const loadAreas = async (mapInstance) => {
   try {
     const { data } = await axios.get("http://localhost:3000/areas");
-    data.forEach((savedArea) => {
+    data.forEach((area) => {
       const polygon = new google.maps.Polygon({
-        paths: savedArea.area,
+        paths: area.areaCords,
       });
 
       setAreaColors(polygon);
       polygon.setMap(mapInstance);
 
       google.maps.event.addListener(polygon, "click", () => {
-        console.log("ID Área:", savedArea.id);
+        const currentSelected = getSelectedArea();
+
+        if (currentSelected && currentSelected.id === area.id) {
+          setSelectedArea({ ...area, ...currentSelected });
+        } else {
+          setSelectedArea(area);
+        }
         setOpenFieldStats(true);
       });
     });
@@ -118,7 +124,7 @@ const confirmArea = () => {
   const areaSize = computeArea(path);
   try {
     axios.post("http://localhost:3000/areas", {
-      area: path.map((point) => ({
+      areaCords: path.map((point) => ({
         lat: point.lat(),
         lng: point.lng(),
       })),
