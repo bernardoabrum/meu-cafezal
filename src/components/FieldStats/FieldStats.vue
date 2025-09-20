@@ -19,6 +19,18 @@
           placeholder="Digite o nome da área"
         />
       </div>
+      <div class="field-container" v-if="form.areaType === 'field'">
+        <p>A qual propriedade pertence este talhão?</p>
+        <select v-model="selectedProperty">
+          <option
+            :key="property.id"
+            v-for="property in properties"
+            :value="property"
+          >
+            {{ property.areaName }}
+          </option>
+        </select>
+      </div>
       <div class="button-container">
         <button @click="closeStats">Fechar</button>
         <button @click="saveStats">Salvar</button>
@@ -29,20 +41,37 @@
 
 <script setup>
 import "./FieldStats.scss";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { useStore } from "@/store";
+import axios from "axios";
 const { setOpenFieldStats, saveSelectedArea, getSelectedArea } = useStore();
+
+let ownedProperty = ref(null);
+let properties = ref([]);
+let selectedProperty = ref(null);
 
 const form = reactive({
   areaType: "property",
   areaName: "",
+  ownedProperty,
 });
 
-onMounted(() => {
+onMounted(async () => {
   const selected = getSelectedArea();
   if (selected) {
     Object.assign(form, selected);
   }
+
+  const result = await axios.get(
+    "http://localhost:3000/areas?areaType=property"
+  );
+
+  const currentId = selected.id;
+  properties.value = result.data.filter((p) => p.id !== currentId);
+});
+
+watch(selectedProperty, (newVal) => {
+  ownedProperty.value = newVal.id;
 });
 
 const closeStats = () => {
@@ -50,7 +79,12 @@ const closeStats = () => {
 };
 
 const saveStats = () => {
-  saveSelectedArea(form);
+  let payload = { ...form };
+
+  if (form.areaType === "property"){
+    payload.ownedProperty = null;
+  } 
+  saveSelectedArea(payload);
   setOpenFieldStats(false);
 };
 </script>

@@ -135,6 +135,7 @@ const confirmArea = () => {
   }
   showModal.value = false;
   currentArea.value = null;
+  window.location.reload();
 };
 
 const deleteArea = () => {
