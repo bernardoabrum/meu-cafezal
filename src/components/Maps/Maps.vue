@@ -49,7 +49,7 @@ onMounted(() => {
 
     loadAreas(mapInstance);
     configMaps(mapInstance);
-  }, 100);
+  }, 200);
 });
 
 const configMaps = (mapInstance) => {
@@ -112,6 +112,24 @@ const loadAreas = async (mapInstance) => {
           setSelectedArea(area);
         }
         setOpenFieldStats(true);
+      });
+
+      const originalOptions = {
+        fillColor: polygon.fillColor,
+        strokeColor: polygon.strokeColor,
+        fillOpacity: polygon.fillOpacity,
+      };
+
+      google.maps.event.addListener(polygon, "mouseover", () => {
+        polygon.setOptions({
+          fillOpacity: 0.7,
+          strokeWeight: 3,
+        });
+      });
+
+      google.maps.event.addListener(polygon, "mouseout", () => {
+        polygon.setOptions(originalOptions);
+        polygon.setOptions({ strokeWeight: 2 });
       });
     });
   } catch (err) {

@@ -68,6 +68,13 @@ onMounted(async () => {
 
   const currentId = selected.id;
   properties.value = result.data.filter((p) => p.id !== currentId);
+
+  if (form.ownedProperty) {
+    const match = properties.value.find((p) => p.id === form.ownedProperty);
+    if (match) {
+      selectedProperty.value = match;
+    }
+  }
 });
 
 watch(selectedProperty, (newVal) => {
@@ -81,9 +88,9 @@ const closeStats = () => {
 const saveStats = () => {
   let payload = { ...form };
 
-  if (form.areaType === "property"){
+  if (form.areaType === "property") {
     payload.ownedProperty = null;
-  } 
+  }
   saveSelectedArea(payload);
   setOpenFieldStats(false);
 };
