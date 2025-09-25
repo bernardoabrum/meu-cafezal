@@ -1,9 +1,17 @@
 <template>
   <div class="demarcate-page">
-    <Maps />
+    <Maps :focusedArea="focusedAreaData" />
+    <Sidebar @focusArea="focusedArea" />
   </div>
 </template>
 
 <script setup>
-import { Maps } from "@/components";
+import { Maps, Sidebar } from "@/components";
+import { ref } from "vue";
+
+const focusedAreaData = ref(null);
+
+const focusedArea = (area) => {
+  focusedAreaData.value = area;
+};
 </script>

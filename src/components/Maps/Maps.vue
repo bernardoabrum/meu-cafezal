@@ -20,7 +20,7 @@
 <script setup>
 import "./Maps.scss";
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { AreaColors } from "@/utils/AreaColors";
 import { ModalConfirm } from "@/components";
@@ -32,6 +32,25 @@ const googleMap = ref(null);
 const showModal = ref(false);
 const currentArea = ref(null);
 const { setOpenFieldStats, setSelectedArea, getSelectedArea } = useStore();
+
+const props = defineProps({
+  focusedArea: Object,
+});
+
+watch(
+  () => props.focusedArea,
+  (area) => {
+    if (!area || !googleMap.value?.map) return;
+
+    const mapInstance = googleMap.value.map;
+
+    const bounds = new google.maps.LatLngBounds();
+    area.areaCords.forEach((coord) => {
+      bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+    });
+    mapInstance.fitBounds(bounds);
+  }
+);
 
 onMounted(() => {
   if (navigator.geolocation) {

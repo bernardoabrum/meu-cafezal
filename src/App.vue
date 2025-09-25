@@ -2,12 +2,11 @@
   <h1>App</h1>
   <Demarcate />
   <FieldStats v-if="showModal" />
-  <Sidebar />
 </template>
 
 <script setup>
 import { Demarcate } from "@/pages";
-import { FieldStats, Sidebar } from "@/components";
+import { FieldStats } from "@/components";
 import { useStore } from "@/store";
 import { computed } from "vue";
 
