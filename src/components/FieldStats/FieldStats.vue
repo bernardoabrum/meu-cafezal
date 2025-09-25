@@ -34,6 +34,7 @@
       <div class="button-container">
         <button @click="closeStats">Fechar</button>
         <button @click="saveStats">Salvar</button>
+        <button @click="deleteArea">Excluir área</button>
       </div>
     </div>
   </div>
@@ -94,5 +95,16 @@ const saveStats = () => {
   }
   saveSelectedArea(payload);
   setOpenFieldStats(false);
+};
+
+const deleteArea = async () => {
+  const id = getSelectedArea().id;
+  try {
+    await axios.delete(`http://localhost:3000/areas/${id}`);
+  } catch (err) {
+    console.error("Não foi possível deletar a área:", err);
+  }
+
+  window.location.reload();
 };
 </script>

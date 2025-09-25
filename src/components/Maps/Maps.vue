@@ -22,7 +22,6 @@ import "./Maps.scss";
 import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
-import { AreaColors } from "@/utils/AreaColors";
 import { ModalConfirm } from "@/components";
 import { useStore } from "@/store";
 
@@ -31,6 +30,7 @@ const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrã
 const googleMap = ref(null);
 const showModal = ref(false);
 const currentArea = ref(null);
+let mapInstance = ref(null);
 const { setOpenFieldStats, setSelectedArea, getSelectedArea } = useStore();
 
 const props = defineProps({
@@ -38,12 +38,20 @@ const props = defineProps({
 });
 
 watch(
+  () => googleMap.value?.map,
+  (map) => {
+    if (!map) return;
+    mapInstance = map;
+
+    configMaps();
+    loadAreas();
+  },
+  { immediate: true }
+);
+
+watch(
   () => props.focusedArea,
   (area) => {
-    if (!area || !googleMap.value?.map) return;
-
-    const mapInstance = googleMap.value.map;
-
     const bounds = new google.maps.LatLngBounds();
     area.areaCords.forEach((coord) => {
       bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
@@ -61,22 +69,21 @@ onMounted(() => {
       };
     });
   }
-
-  setTimeout(() => {
-    const mapInstance = googleMap.value?.map;
-    if (!mapInstance) return;
-
-    loadAreas(mapInstance);
-    configMaps(mapInstance);
-  }, 200);
 });
 
-const configMaps = (mapInstance) => {
+const configMaps = () => {
   mapInstance.setOptions({
     mapTypeControl: false,
     streetViewControl: false,
     fullscreenControl: false,
     zoomControl: false,
+    styles: [
+      {
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+    ],
   });
 
   const drawingManager = new google.maps.drawing.DrawingManager({
@@ -89,29 +96,13 @@ const configMaps = (mapInstance) => {
   drawingManager.setMap(mapInstance);
 
   google.maps.event.addListener(drawingManager, "overlaycomplete", (event) => {
-    setAreaColors(event.overlay);
     drawingManager.setDrawingMode(null);
     currentArea.value = event.overlay;
     showModal.value = true;
   });
 };
 
-const setAreaColors = (overlay) => {
-  const randomColor = AreaColors[Math.floor(Math.random() * AreaColors.length)];
-
-  overlay.setOptions({
-    fillColor: randomColor,
-    fillOpacity: 0.4,
-    strokeColor: randomColor,
-    strokeWeight: 2,
-  });
-};
-
-const computeArea = (path) => {
-  return google.maps.geometry.spherical.computeArea(path);
-};
-
-const loadAreas = async (mapInstance) => {
+const loadAreas = async () => {
   try {
     const { data } = await axios.get("http://localhost:3000/areas");
     data.forEach((area) => {
@@ -119,7 +110,6 @@ const loadAreas = async (mapInstance) => {
         paths: area.areaCords,
       });
 
-      setAreaColors(polygon);
       polygon.setMap(mapInstance);
 
       google.maps.event.addListener(polygon, "click", () => {
@@ -134,8 +124,7 @@ const loadAreas = async (mapInstance) => {
       });
 
       const originalOptions = {
-        fillColor: polygon.fillColor,
-        strokeColor: polygon.strokeColor,
+        strokeWeight: polygon.strokeWeight,
         fillOpacity: polygon.fillOpacity,
       };
 
@@ -148,7 +137,6 @@ const loadAreas = async (mapInstance) => {
 
       google.maps.event.addListener(polygon, "mouseout", () => {
         polygon.setOptions(originalOptions);
-        polygon.setOptions({ strokeWeight: 2 });
       });
     });
   } catch (err) {
@@ -156,9 +144,14 @@ const loadAreas = async (mapInstance) => {
   }
 };
 
+const computeArea = (path) => {
+  return google.maps.geometry.spherical.computeArea(path);
+};
+
 const confirmArea = () => {
   const path = currentArea.value.getPath().getArray();
   const areaSize = computeArea(path);
+
   try {
     axios.post("http://localhost:3000/areas", {
       areaCords: path.map((point) => ({
@@ -166,17 +159,18 @@ const confirmArea = () => {
         lng: point.lng(),
       })),
       areaSize,
+      areaName: "Nova propriedade",
     });
   } catch (err) {
     console.error("Erro ao salvar área:", err);
   }
+
   showModal.value = false;
   currentArea.value = null;
   window.location.reload();
 };
 
 const deleteArea = () => {
-  currentArea.value.setMap(null);
   showModal.value = false;
   currentArea.value = null;
   window.location.reload();

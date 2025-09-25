@@ -2,15 +2,17 @@
   <div class="cmp-sidebar">
     <h2>Sidebar</h2>
     <div v-for="property in properties" :key="property.id">
-      <div class="properties-container">
-        <button>
-          >
+      <div>
+        <button @click="toggleExpand(property.id)">
+          <font-awesome-icon
+            :icon="expanded.includes(property.id) ? faChevronUp : faChevronDown"
+          />
         </button>
-        <button @click="handlePropertyClick(property)">
+        <button @click="$emit('focusArea', property)">
           {{ property.areaName }}
         </button>
       </div>
-      <div v-if="expanded.includes(property.id)">
+      <div class="fields-container" v-if="expanded.includes(property.id)">
         <button
           v-for="field in getFieldsByProperty(property.id)"
           :key="field.id"
@@ -24,7 +26,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 import "./Sidebar.scss";
 
@@ -44,11 +48,6 @@ onMounted(async () => {
   );
   fields.value = resFields.data;
 });
-
-const handlePropertyClick = (property) => {
-  toggleExpand(property.id);
-  emit("focusArea", property);
-};
 
 const toggleExpand = (id) => {
   if (expanded.value.includes(id)) {

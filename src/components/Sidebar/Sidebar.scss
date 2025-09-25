@@ -6,4 +6,9 @@
   width: 350px;
   height: 100vh;
   background-color: beige;
+
+  .fields-container {
+    display: flex;
+    flex-direction: column;
+  }
 }
