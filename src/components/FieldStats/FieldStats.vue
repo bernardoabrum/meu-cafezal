@@ -46,7 +46,12 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useStore } from "@/store";
 import axios from "axios";
 
-const { setOpenFieldStats, saveSelectedArea, getSelectedArea } = useStore();
+const {
+  setOpenFieldStats,
+  saveSelectedArea,
+  getSelectedArea,
+  setSelectedArea,
+} = useStore();
 
 let ownedProperty = ref(null);
 let properties = ref([]);
@@ -85,6 +90,7 @@ watch(selectedProperty, (newVal) => {
 
 const closeStats = () => {
   setOpenFieldStats(false);
+  setSelectedArea({});
 };
 
 const saveStats = () => {

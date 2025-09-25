@@ -28,14 +28,13 @@
 <script setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import "./Sidebar.scss";
 
 let properties = ref([]);
 let fields = ref([]);
 let expanded = ref([]);
-const emit = defineEmits(["focusArea"]);
 
 onMounted(async () => {
   const resProps = await axios.get(

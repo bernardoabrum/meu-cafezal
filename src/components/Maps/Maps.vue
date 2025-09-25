@@ -108,6 +108,10 @@ const loadAreas = async () => {
     data.forEach((area) => {
       const polygon = new google.maps.Polygon({
         paths: area.areaCords,
+        fillColor: getAreaColor(area.areaType),
+        strokeColor: getAreaColor(area.areaType),
+        fillOpacity: 0.3,
+        strokeWeight: 1,
       });
 
       polygon.setMap(mapInstance);
@@ -130,8 +134,8 @@ const loadAreas = async () => {
 
       google.maps.event.addListener(polygon, "mouseover", () => {
         polygon.setOptions({
-          fillOpacity: 0.7,
-          strokeWeight: 3,
+          fillOpacity: 0.5,
+          strokeWeight: 2,
         });
       });
 
@@ -142,6 +146,11 @@ const loadAreas = async () => {
   } catch (err) {
     console.error("Erro ao carregar áreas:", err);
   }
+};
+
+const getAreaColor = (areaType) => {
+  if (!areaType) return null;
+  return areaType === "property" ? "#3357FF" : "#33FF57";
 };
 
 const computeArea = (path) => {
