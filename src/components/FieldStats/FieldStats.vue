@@ -1,18 +1,18 @@
 <template>
   <div class="cmp-field-stats">
-    <div class="container">
+    <div class="modal">
       <h2>FieldStats</h2>
-      <div class="checkbox-container">
-        <div>
-          <input type="radio" value="property" v-model="form.areaType" />
-          <span>Propriedade</span>
+      <div class="general-container">
+        <div class="checkbox">
+          <div>
+            <input type="radio" value="property" v-model="form.areaType" />
+            <span>Propriedade</span>
+          </div>
+          <div>
+            <input type="radio" value="field" v-model="form.areaType" />
+            <span>Talhão</span>
+          </div>
         </div>
-        <div>
-          <input type="radio" value="field" v-model="form.areaType" />
-          <span>Talhão</span>
-        </div>
-      </div>
-      <div class="input-container">
         <input
           type="text"
           v-model="form.areaName"
@@ -30,6 +30,17 @@
             {{ property.areaName }}
           </option>
         </select>
+        <p>Qual espaçamento utilizado no talhão?</p>
+        <div class="measures">
+          <div>
+            <p>Rua:</p>
+            <input type="number" v-model="form.roadSpace" min="0" step="0.1" />
+          </div>
+          <div>
+            <p>Pé a pé:</p>
+            <input type="number" v-model="form.plantSpace" min="0" step="0.1" />
+          </div>
+        </div>
       </div>
       <div class="button-container">
         <button @click="closeStats">Fechar</button>
@@ -61,6 +72,8 @@ const form = reactive({
   areaType: "property",
   areaName: "",
   ownedProperty,
+  plantSpace: 0,
+  roadSpace: 0,
 });
 
 onMounted(async () => {

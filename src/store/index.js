@@ -5,6 +5,8 @@ const store = createStore({
   state: {
     openFieldStats: false,
     selectedArea: {},
+    loggedUser: null,
+    isAuthenticated: false,
   },
   mutations: {
     setOpenFieldStats(state, value) {
@@ -15,6 +17,14 @@ const store = createStore({
     },
     updateSelectedAreaInfo(state, payload) {
       state.selectedArea = { ...state.selectedArea, ...payload };
+    },
+    setLoggedUser(state, user) {
+      state.loggedUser = user;
+      state.isAuthenticated = !!user;
+    },
+    logout(state) {
+      state.loggedUser = null;
+      state.isAuthenticated = false;
     },
   },
   actions: {
@@ -36,6 +46,12 @@ const store = createStore({
     getSelectedArea(state) {
       return state.selectedArea;
     },
+    getLoggedUser(state) {
+      return state.loggedUser;
+    },
+    getIsAuthenticated(state) {
+      return state.isAuthenticated;
+    },
   },
 });
 
@@ -46,6 +62,9 @@ export const useStore = () => {
   const getSelectedArea = () => store.state.selectedArea;
   const saveSelectedArea = (payload) =>
     store.dispatch("saveSelectedArea", payload);
+  const setLoggedUser = (user) => store.commit("setLoggedUser", user);
+  const getLoggedUser = () => store.state.loggedUser;
+  const getIsAuthenticated = () => store.state.isAuthenticated;
 
   return {
     setOpenFieldStats,
@@ -53,6 +72,9 @@ export const useStore = () => {
     setSelectedArea,
     getSelectedArea,
     saveSelectedArea,
+    getLoggedUser,
+    setLoggedUser,
+    getIsAuthenticated,
   };
 };
 

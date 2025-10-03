@@ -1,11 +1,8 @@
 <template>
-  <h1>App</h1>
-  <Demarcate />
+  <router-view />
 </template>
 
-<script setup>
-import { Demarcate } from "@/pages";
-</script>
+<script setup></script>
 
 <style>
 html,

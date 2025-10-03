@@ -9,18 +9,44 @@
   top: 0;
   background-color: rgba(0, 0, 0, 0.8);
 
-  .container {
+  .modal {
     display: flex;
     flex-direction: column;
-    gap: 30px;
     background-color: white;
     width: 500px;
     padding: 20px;
-    border-radius: 30px;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    gap: 30px;
 
-    .checkbox-container {
+    .general-container {
       display: flex;
-      gap: 50px;
+      flex-direction: column;
+
+      .checkbox {
+        display: flex;
+        gap: 30px;
+      }
+    }
+
+    .field-container {
+      .measures {
+        display: flex;
+        gap: 30px;
+
+        input {
+          width: 80px;
+          border: solid 1px #ccc;
+          outline: none;
+          padding: 5px 15px;
+        }
+
+        div {
+          display: flex;
+          gap: 10px;
+        }
+      }
     }
 
     .button-container {

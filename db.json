@@ -1,4 +1,12 @@
 {
+  "users": [
+    {
+      "id": "1824",
+      "name": "Bernardo",
+      "email": "bernardo",
+      "password": "123"
+    }
+  ],
   "areas": [
     {
       "id": "37d5",
@@ -84,7 +92,9 @@
       "areaSize": 9420.480494796753,
       "areaType": "field",
       "areaName": "talhao1",
-      "ownedProperty": "37d5"
+      "ownedProperty": "37d5",
+      "plantSpace": 1,
+      "roadSpace": 3
     },
     {
       "id": "cd8d",
@@ -157,7 +167,9 @@
       "areaSize": 10132.23956358434,
       "areaType": "field",
       "areaName": "talhao2",
-      "ownedProperty": "37d5"
+      "ownedProperty": "37d5",
+      "plantSpace": 1.5,
+      "roadSpace": 2
     },
     {
       "id": "f349",

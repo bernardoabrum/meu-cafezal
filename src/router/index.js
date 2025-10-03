@@ -9,9 +9,9 @@ const router = createRouter({
       redirect: "/demarcate",
     },
     {
-      path: "/performance",
-      name: "Performance",
-      component: pages.Performance,
+      path: "/statistics",
+      name: "Statistics",
+      component: pages.Statistics,
     },
     {
       path: "/demarcate",
@@ -19,9 +19,9 @@ const router = createRouter({
       component: pages.Demarcate,
     },
     {
-      path: "/visualize",
-      name: "Visualize",
-      component: pages.Visualize,
+      path: "/login",
+      name: "Login",
+      component: pages.Login,
     },
   ],
 });
