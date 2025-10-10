@@ -24,6 +24,15 @@ const router = createRouter({
       name: "Login",
       component: pages.Login,
     },
+    {
+      path: "/notfound",
+      name: "NotFound",
+      component: pages.NotFound,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      redirect: "/notfound",
+    },
   ],
 });
 
@@ -37,9 +46,9 @@ router.beforeEach((to, from, next) => {
     return next("/login");
   }
 
-  // if (loggedUser && to.path === "/login") {
-  //   return next("/demarcate");
-  // }
+  if (loggedUser && to.path === "/login") {
+    return next("/demarcate");
+  }
 
   next();
 });
