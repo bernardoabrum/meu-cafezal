@@ -5,8 +5,10 @@
         <h1>Login</h1>
         <input v-model="email" type="email" placeholder="Email" />
         <input v-model="password" type="password" placeholder="Senha" />
-        <button @click="loginButton">Entrar</button>
-        <button @click="registerButton">Registrar</button>
+        <div class="buttons">
+          <button @click="loginButton">Entrar</button>
+          <button @click="registerButton">Registrar</button>
+        </div>
       </div>
       <div v-else class="register">
         <h1>Register</h1>
@@ -71,7 +73,7 @@ const registerButton = () => {
   showRegister.value = true;
 };
 
-const createAccount = () => {
+const createAccount = async () => {
   if (
     !name.value ||
     !email.value ||
@@ -86,23 +88,35 @@ const createAccount = () => {
     alert("As senhas não coincidem!");
     return;
   }
-  axios
-    .post("http://localhost:3000/users", {
+
+  try {
+    const { data: existingUsers } = await axios.get(
+      "http://localhost:3000/users",
+      {
+        params: { email: email.value },
+      }
+    );
+
+    if (existingUsers.length > 0) {
+      alert("Este email já está cadastrado!");
+      return;
+    }
+
+    await axios.post("http://localhost:3000/users", {
       name: name.value,
       email: email.value,
       password: password.value,
-    })
-    .then(() => {
-      alert("Conta criada com sucesso!");
-      name.value = "";
-      email.value = "";
-      password.value = "";
-      confirmPassword.value = "";
-      showRegister.value = false;
-    })
-    .catch((err) => {
-      console.error("Erro ao criar conta:", err);
-      alert("Erro ao criar conta. Tente novamente.");
     });
+
+    alert("Conta criada com sucesso!");
+    name.value = "";
+    email.value = "";
+    password.value = "";
+    confirmPassword.value = "";
+    showRegister.value = false;
+  } catch (err) {
+    console.error("Erro ao criar conta:", err);
+    alert("Erro ao criar conta. Tente novamente.");
+  }
 };
 </script>

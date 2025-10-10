@@ -11,6 +11,7 @@ import { ref } from "vue";
 import { useStore } from "@/store";
 import { Maps, Sidebar, FieldStats } from "@/components";
 import { computed } from "vue";
+import "./Demarcate.scss";
 
 const { getOpenFieldStats } = useStore();
 const openFieldStats = computed(() => getOpenFieldStats());

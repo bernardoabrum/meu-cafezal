@@ -21,10 +21,19 @@ const store = createStore({
     setLoggedUser(state, user) {
       state.loggedUser = user;
       state.isAuthenticated = !!user;
+      if (user) {
+        localStorage.setItem("authToken", Date.now());
+        localStorage.setItem("loggedUser", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("loggedUser");
+      }
     },
     logout(state) {
       state.loggedUser = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("loggedUser");
     },
   },
   actions: {
@@ -36,6 +45,14 @@ const store = createStore({
         commit("updateSelectedAreaInfo", payload);
       } catch (err) {
         console.error("Erro ao salvar informações da área:", err);
+      }
+    },
+
+    checkAuth({ commit }) {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        commit("setLoggedUser", savedUser);
       }
     },
   },

@@ -1,0 +1,10 @@
+.cmp-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  height: 100px;
+  position: absolute;
+  background-color: red;
+  width: 100vw;
+  z-index: 10;
+}
