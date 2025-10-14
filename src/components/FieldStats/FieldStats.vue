@@ -62,6 +62,7 @@ const {
   saveSelectedArea,
   getSelectedArea,
   setSelectedArea,
+  getLoggedUser,
 } = useStore();
 
 let ownedProperty = ref(null);
@@ -78,12 +79,13 @@ const form = reactive({
 
 onMounted(async () => {
   const selected = getSelectedArea();
+  const user = getLoggedUser();
   if (selected) {
     Object.assign(form, selected);
   }
 
   const result = await axios.get(
-    "http://localhost:3000/areas?areaType=property"
+    `http://localhost:3000/areas?areaType=property&user=${user.id}`
   );
 
   const currentId = selected.id;
@@ -114,6 +116,7 @@ const saveStats = () => {
   }
   saveSelectedArea(payload);
   setOpenFieldStats(false);
+  window.location.reload();
 };
 
 const deleteArea = async () => {

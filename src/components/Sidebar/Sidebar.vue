@@ -31,19 +31,22 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import "./Sidebar.scss";
+import { useStore } from "@/store";
 
 let properties = ref([]);
 let fields = ref([]);
 let expanded = ref([]);
+const { getLoggedUser } = useStore();
 
 onMounted(async () => {
+  const user = getLoggedUser();
   const resProps = await axios.get(
-    "http://localhost:3000/areas?areaType=property"
+    `http://localhost:3000/areas?areaType=property&user=${user.id}`
   );
   properties.value = resProps.data;
 
   const resFields = await axios.get(
-    "http://localhost:3000/areas?areaType=field"
+    `http://localhost:3000/areas?areaType=field&user=${user.id}`
   );
   fields.value = resFields.data;
 });

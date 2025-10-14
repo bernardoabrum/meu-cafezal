@@ -31,7 +31,9 @@ const googleMap = ref(null);
 const showModal = ref(false);
 const currentArea = ref(null);
 let mapInstance = ref(null);
-const { setOpenFieldStats, setSelectedArea, getSelectedArea } = useStore();
+const { setOpenFieldStats, setSelectedArea, getSelectedArea, getLoggedUser } =
+  useStore();
+const user = getLoggedUser();
 
 const props = defineProps({
   focusedArea: Object,
@@ -104,7 +106,10 @@ const configMaps = () => {
 
 const loadAreas = async () => {
   try {
-    const { data } = await axios.get("http://localhost:3000/areas");
+    user.value = getLoggedUser();
+    const { data } = await axios.get(
+      `http://localhost:3000/areas?user=${user.id}`
+    );
     data.forEach((area) => {
       const polygon = new google.maps.Polygon({
         paths: area.areaCords,
@@ -158,6 +163,7 @@ const computeArea = (path) => {
 };
 
 const confirmArea = () => {
+  user.value = getLoggedUser();
   const path = currentArea.value.getPath().getArray();
   const areaSize = computeArea(path);
 
@@ -169,14 +175,15 @@ const confirmArea = () => {
       })),
       areaSize,
       areaName: "Nova propriedade",
+      user: user.id,
     });
   } catch (err) {
     console.error("Erro ao salvar área:", err);
+  } finally {
+    showModal.value = false;
+    currentArea.value = null;
+    window.location.reload();
   }
-
-  showModal.value = false;
-  currentArea.value = null;
-  window.location.reload();
 };
 
 const deleteArea = () => {

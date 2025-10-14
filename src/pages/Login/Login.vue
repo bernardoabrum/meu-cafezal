@@ -21,6 +21,7 @@
           placeholder="Confirme a senha"
         />
         <button @click="createAccount">Criar conta</button>
+        <button @click="goBack">Voltar</button>
       </div>
     </div>
   </div>
@@ -71,6 +72,10 @@ const loginButton = () => {
 
 const registerButton = () => {
   showRegister.value = true;
+};
+
+const goBack = () => {
+  showRegister.value = false;
 };
 
 const createAccount = async () => {
