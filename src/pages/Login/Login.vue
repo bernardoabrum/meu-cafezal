@@ -42,32 +42,30 @@ const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 
-const loginButton = () => {
+const loginButton = async () => {
   if (!email.value || !password.value) {
     alert("Por favor, preencha todos os campos.");
     return;
   }
 
-  axios
-    .get("http://localhost:3000/users", {
+  try {
+    const { data } = await axios.get("http://localhost:3000/users", {
       params: {
         email: email.value,
         password: password.value,
       },
-    })
-    .then((response) => {
-      if (response.data.length) {
-        const user = response.data[0];
-        setLoggedUser(user);
-        router.push("/demarcate");
-      } else {
-        alert("Email ou senha incorretos.");
-      }
-    })
-    .catch((err) => {
-      console.error("Erro ao fazer login:", err);
-      alert("Erro ao fazer login. Tente novamente.");
     });
+
+    if (data.length) {
+      const user = data[0];
+      setLoggedUser(user);
+      router.push("/demarcate");
+    } else {
+      alert("Email ou senha incorretos.");
+    }
+  } catch (err) {
+    console.error("Erro ao fazer login:", err);
+  }
 };
 
 const registerButton = () => {
