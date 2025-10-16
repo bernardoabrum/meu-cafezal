@@ -1,5 +1,9 @@
 .cmp-maps {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+
+  .modal {
+    position: absolute;
+  }
 }

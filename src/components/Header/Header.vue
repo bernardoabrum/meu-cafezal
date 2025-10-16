@@ -1,7 +1,7 @@
 <template>
   <div class="cmp-header">
     <h1>Header</h1>
-    <div>
+    <div class="account">
       <p>{{ name }}</p>
       <button @click="logout">Sair</button>
     </div>

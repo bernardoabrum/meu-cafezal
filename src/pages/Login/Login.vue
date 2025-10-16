@@ -59,7 +59,7 @@ const loginButton = async () => {
     if (data.length) {
       const user = data[0];
       setLoggedUser(user);
-      router.push("/demarcate");
+      router.push("/home");
     } else {
       alert("Email ou senha incorretos.");
     }

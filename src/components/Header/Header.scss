@@ -3,8 +3,18 @@
   justify-content: space-between;
   padding: 20px;
   height: 100px;
-  position: relative;
+  position: absolute;
   background-color: red;
   width: 100vw;
   z-index: 10;
+
+  .account {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    button {
+      padding: 6px;
+    }
+  }
 }

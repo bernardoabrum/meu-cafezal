@@ -7,12 +7,12 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/login",
+      redirect: "/home",
     },
     {
-      path: "/statistics",
-      name: "Statistics",
-      component: pages.Statistics,
+      path: "/home",
+      name: "Home",
+      component: pages.Home,
     },
     {
       path: "/demarcate",
@@ -47,7 +47,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (loggedUser && to.path === "/login") {
-    return next("/demarcate");
+    return next("/home");
   }
 
   next();

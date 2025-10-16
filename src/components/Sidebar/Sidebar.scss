@@ -1,9 +1,10 @@
 .cmp-sidebar {
   display: flex;
-  position: absolute;
   flex-direction: column;
+  position: absolute;
   top: 0;
-  width: 350px;
+  left: 0;
+  width: 300px;
   height: 100vh;
   background-color: beige;
   padding-top: 100px;
