@@ -22,6 +22,7 @@
       <div class="field-container" v-if="form.areaType === 'field'">
         <p>A qual propriedade pertence este talhão?</p>
         <select v-model="selectedProperty">
+          <option disabled value="">Selecione uma propriedade</option>
           <option
             :key="property.id"
             v-for="property in properties"
@@ -34,18 +35,27 @@
         <div class="measures">
           <div>
             <p>Rua:</p>
-            <input type="number" v-model="form.roadSpace" min="0" step="0.1" />
+            <input
+              type="number"
+              v-model="fieldForm.roadSpace"
+              min="0"
+              step="0.1"
+            />
           </div>
           <div>
             <p>Pé a pé:</p>
-            <input type="number" v-model="form.plantSpace" min="0" step="0.1" />
+            <input
+              type="number"
+              v-model="fieldForm.plantSpace"
+              min="0"
+              step="0.1"
+            />
           </div>
         </div>
       </div>
       <div class="button-container">
-        <button @click="closeStats">Fechar</button>
         <button @click="saveStats">Salvar</button>
-        <button @click="deleteArea">Excluir área</button>
+        <button @click="deleteArea">Cancelar</button>
       </div>
     </div>
   </div>
@@ -53,80 +63,59 @@
 
 <script setup>
 import "./FieldStats.scss";
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useStore } from "@/store";
 import axios from "axios";
 
-const {
-  setOpenFieldStats,
-  saveSelectedArea,
-  getSelectedArea,
-  setSelectedArea,
-  getLoggedUser,
-} = useStore();
+const { setOpenFieldStats, getLoggedUser, getPedingArea, setPendingArea } =
+  useStore();
 
 let ownedProperty = ref(null);
 let properties = ref([]);
-let selectedProperty = ref(null);
+let selectedProperty = ref("");
+const user = getLoggedUser();
 
 const form = reactive({
-  areaType: "property",
   areaName: "",
+  areaType: "property",
+});
+
+const fieldForm = reactive({
   ownedProperty,
   plantSpace: 0,
   roadSpace: 0,
 });
 
 onMounted(async () => {
-  const selected = getSelectedArea();
-  const user = getLoggedUser();
-  if (selected) {
-    Object.assign(form, selected);
-  }
-
-  const result = await axios.get(
-    `http://localhost:3000/areas?areaType=property&user=${user.id}`
-  );
-
-  const currentId = selected.id;
-  properties.value = result.data.filter((p) => p.id !== currentId);
-
-  if (form.ownedProperty) {
-    const match = properties.value.find((p) => p.id === form.ownedProperty);
-    if (match) {
-      selectedProperty.value = match;
-    }
+  try {
+    const { data } = await axios.get(
+      `http://localhost:3000/areas?areaType=property&user=${user.id}`
+    );
+    properties.value = data;
+  } catch (err) {
+    console.error("Erro ao carregar propriedades:", err);
   }
 });
 
-watch(selectedProperty, (newVal) => {
-  ownedProperty.value = newVal.id;
-});
+const saveStats = async () => {
+  const pedingArea = getPedingArea();
+  let payload =
+    form.areaType === "field" ? { ...form, ...fieldForm } : { ...form };
 
-const closeStats = () => {
-  setOpenFieldStats(false);
-  setSelectedArea({});
-};
-
-const saveStats = () => {
-  let payload = { ...form };
-
-  if (form.areaType === "property") {
-    payload.ownedProperty = null;
+  try {
+    axios.post("http://localhost:3000/areas", {
+      ...payload,
+      ...pedingArea,
+    });
+  } catch (err) {
+    console.error("Erro ao salvar área:", err);
   }
-  saveSelectedArea(payload);
   setOpenFieldStats(false);
+  setPendingArea({});
   window.location.reload();
 };
 
-const deleteArea = async () => {
-  const id = getSelectedArea().id;
-  try {
-    await axios.delete(`http://localhost:3000/areas/${id}`);
-  } catch (err) {
-    console.error("Não foi possível deletar a área:", err);
-  }
-
+const deleteArea = () => {
   window.location.reload();
 };
 </script>

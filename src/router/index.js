@@ -20,6 +20,11 @@ const router = createRouter({
       component: pages.Demarcate,
     },
     {
+      path: "/visualize",
+      name: "Visualize",
+      component: pages.Visualize,
+    },
+    {
       path: "/login",
       name: "Login",
       component: pages.Login,

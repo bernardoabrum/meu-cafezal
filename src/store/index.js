@@ -4,6 +4,7 @@ import axios from "axios";
 const store = createStore({
   state: {
     openFieldStats: false,
+    pendingArea: {},
     selectedArea: {},
     loggedUser: null,
     isAuthenticated: false,
@@ -11,6 +12,9 @@ const store = createStore({
   mutations: {
     setOpenFieldStats(state, value) {
       state.openFieldStats = value;
+    },
+    setPendingArea(state, area) {
+      state.pendingArea = area;
     },
     setSelectedArea(state, area) {
       state.selectedArea = area;
@@ -69,6 +73,9 @@ const store = createStore({
     getIsAuthenticated(state) {
       return state.isAuthenticated;
     },
+    getPedingArea(state) {
+      return state.pendingArea;
+    },
   },
 });
 
@@ -82,6 +89,8 @@ export const useStore = () => {
   const setLoggedUser = (user) => store.commit("setLoggedUser", user);
   const getLoggedUser = () => store.state.loggedUser;
   const getIsAuthenticated = () => store.state.isAuthenticated;
+  const setPendingArea = (area) => store.commit("setPendingArea", area);
+  const getPedingArea = () => store.state.pendingArea;
 
   return {
     setOpenFieldStats,
@@ -92,6 +101,8 @@ export const useStore = () => {
     getLoggedUser,
     setLoggedUser,
     getIsAuthenticated,
+    setPendingArea,
+    getPedingArea,
   };
 };
 

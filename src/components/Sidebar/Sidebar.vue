@@ -1,14 +1,14 @@
 <template>
   <div class="cmp-sidebar">
     <h2>Sidebar</h2>
-    <div v-for="property in properties" :key="property.id">
-      <div>
+    <div class="buttons" v-for="property in properties" :key="property.id">
+      <div class="property-button">
         <button @click="toggleExpand(property.id)">
           <font-awesome-icon
             :icon="expanded.includes(property.id) ? faChevronUp : faChevronDown"
           />
         </button>
-        <button @click="$emit('focusArea', property)">
+        <button class="name" @click="$emit('focusArea', property)">
           {{ property.areaName }}
         </button>
       </div>

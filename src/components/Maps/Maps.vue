@@ -1,5 +1,11 @@
 <template>
   <div class="cmp-maps">
+    <div class="buttons">
+      <button v-if="!isDrawing" @click="startDrawing">
+        Começar a desenhar
+      </button>
+      <button v-else @click="stopDrawing">Parar</button>
+    </div>
     <GoogleMap
       ref="googleMap"
       :api-key="VITE_GOOGLE_MAPS_API_KEY"
@@ -9,11 +15,13 @@
       map-type-id="hybrid"
       :libraries="['drawing', 'geometry']"
     />
-    <ModalConfirm
-      v-if="showModal"
-      @confirm="confirmArea"
-      @delete="deleteArea"
-    />
+    <div class="modal">
+      <ModalConfirm
+        v-if="showModal"
+        @confirm="confirmArea"
+        @delete="deleteArea"
+      />
+    </div>
   </div>
 </template>
 
@@ -30,14 +38,11 @@ const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrã
 const googleMap = ref(null);
 const showModal = ref(false);
 const currentArea = ref(null);
+const isDrawing = ref(false);
 let mapInstance = ref(null);
-const { setOpenFieldStats, setSelectedArea, getSelectedArea, getLoggedUser } =
-  useStore();
+let drawingManager = null;
+const { setOpenFieldStats, getLoggedUser, setPendingArea } = useStore();
 const user = getLoggedUser();
-
-const props = defineProps({
-  focusedArea: Object,
-});
 
 watch(
   () => googleMap.value?.map,
@@ -49,17 +54,6 @@ watch(
     loadAreas();
   },
   { immediate: true }
-);
-
-watch(
-  () => props.focusedArea,
-  (area) => {
-    const bounds = new google.maps.LatLngBounds();
-    area.areaCords.forEach((coord) => {
-      bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
-    });
-    mapInstance.fitBounds(bounds);
-  }
 );
 
 onMounted(() => {
@@ -88,11 +82,9 @@ const configMaps = () => {
     ],
   });
 
-  const drawingManager = new google.maps.drawing.DrawingManager({
+  drawingManager = new google.maps.drawing.DrawingManager({
     drawingMode: null,
-    drawingControlOptions: {
-      drawingModes: ["polygon"],
-    },
+    drawingControl: false,
   });
 
   drawingManager.setMap(mapInstance);
@@ -101,61 +93,37 @@ const configMaps = () => {
     drawingManager.setDrawingMode(null);
     currentArea.value = event.overlay;
     showModal.value = true;
+    isDrawing.value = false;
   });
 };
 
 const loadAreas = async () => {
   try {
-    user.value = getLoggedUser();
     const { data } = await axios.get(
       `http://localhost:3000/areas?user=${user.id}`
     );
     data.forEach((area) => {
       const polygon = new google.maps.Polygon({
         paths: area.areaCords,
-        fillColor: getAreaColor(area.areaType),
-        strokeColor: getAreaColor(area.areaType),
         fillOpacity: 0.3,
         strokeWeight: 1,
       });
 
       polygon.setMap(mapInstance);
-
-      google.maps.event.addListener(polygon, "click", () => {
-        const currentSelected = getSelectedArea();
-
-        if (currentSelected && currentSelected.id === area.id) {
-          setSelectedArea({ ...area, ...currentSelected });
-        } else {
-          setSelectedArea(area);
-        }
-        setOpenFieldStats(true);
-      });
-
-      const originalOptions = {
-        strokeWeight: polygon.strokeWeight,
-        fillOpacity: polygon.fillOpacity,
-      };
-
-      google.maps.event.addListener(polygon, "mouseover", () => {
-        polygon.setOptions({
-          fillOpacity: 0.5,
-          strokeWeight: 2,
-        });
-      });
-
-      google.maps.event.addListener(polygon, "mouseout", () => {
-        polygon.setOptions(originalOptions);
-      });
     });
   } catch (err) {
     console.error("Erro ao carregar áreas:", err);
   }
 };
 
-const getAreaColor = (areaType) => {
-  if (!areaType) return null;
-  return areaType === "property" ? "#3357FF" : "#33FF57";
+const startDrawing = () => {
+  isDrawing.value = true;
+  drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+};
+
+const stopDrawing = () => {
+  isDrawing.value = false;
+  drawingManager.setDrawingMode(null);
 };
 
 const computeArea = (path) => {
@@ -163,26 +131,25 @@ const computeArea = (path) => {
 };
 
 const confirmArea = () => {
-  user.value = getLoggedUser();
   const path = currentArea.value.getPath().getArray();
   const areaSize = computeArea(path);
+  const payload = {
+    user: user.id,
+    areaSize,
+    areaCords: path.map((point) => ({
+      lat: point.lat(),
+      lng: point.lng(),
+    })),
+  };
 
   try {
-    axios.post("http://localhost:3000/areas", {
-      areaCords: path.map((point) => ({
-        lat: point.lat(),
-        lng: point.lng(),
-      })),
-      areaSize,
-      areaName: "Nova propriedade",
-      user: user.id,
-    });
+    setOpenFieldStats(true);
+    setPendingArea(payload);
   } catch (err) {
     console.error("Erro ao salvar área:", err);
   } finally {
     showModal.value = false;
     currentArea.value = null;
-    window.location.reload();
   }
 };
 

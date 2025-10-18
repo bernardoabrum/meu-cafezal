@@ -9,6 +9,16 @@
   background-color: beige;
   padding-top: 100px;
 
+  .buttons {
+    .property-button {
+      display: flex;
+
+      .name {
+        width: 100%;
+      }
+    }
+  }
+
   .fields-container {
     display: flex;
     flex-direction: column;
