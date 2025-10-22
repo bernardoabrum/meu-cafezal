@@ -4,12 +4,16 @@ import axios from "axios";
 const store = createStore({
   state: {
     openFieldStats: false,
+    openDataEntry: false,
     pendingArea: {},
     selectedArea: {},
     loggedUser: null,
     isAuthenticated: false,
   },
   mutations: {
+    setOpenDataEntry(state, value) {
+      state.openDataEntry = value;
+    },
     setOpenFieldStats(state, value) {
       state.openFieldStats = value;
     },
@@ -61,6 +65,9 @@ const store = createStore({
     },
   },
   getters: {
+    getOpenDataEntry(state) {
+      return state.openDataEntry;
+    },
     getOpenFieldStats(state) {
       return state.openFieldStats;
     },
@@ -73,7 +80,7 @@ const store = createStore({
     getIsAuthenticated(state) {
       return state.isAuthenticated;
     },
-    getPedingArea(state) {
+    getPendingArea(state) {
       return state.pendingArea;
     },
   },
@@ -90,7 +97,9 @@ export const useStore = () => {
   const getLoggedUser = () => store.state.loggedUser;
   const getIsAuthenticated = () => store.state.isAuthenticated;
   const setPendingArea = (area) => store.commit("setPendingArea", area);
-  const getPedingArea = () => store.state.pendingArea;
+  const getPendingArea = () => store.state.pendingArea;
+  const setOpenDataEntry = (value) => store.commit("setOpenDataEntry", value);
+  const getOpenDataEntry = () => store.state.openDataEntry;
 
   return {
     setOpenFieldStats,
@@ -102,7 +111,9 @@ export const useStore = () => {
     setLoggedUser,
     getIsAuthenticated,
     setPendingArea,
-    getPedingArea,
+    getPendingArea,
+    setOpenDataEntry,
+    getOpenDataEntry,
   };
 };
 

@@ -55,7 +55,7 @@
       </div>
       <div class="button-container">
         <button @click="saveStats">Salvar</button>
-        <button @click="deleteArea">Cancelar</button>
+        <button @click="deleteArea">Excluir área</button>
       </div>
     </div>
   </div>
@@ -63,14 +63,13 @@
 
 <script setup>
 import "./FieldStats.scss";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { useStore } from "@/store";
 import axios from "axios";
 
-const { setOpenFieldStats, getLoggedUser, getPedingArea, setPendingArea } =
+const { setOpenFieldStats, getLoggedUser, getPendingArea, setPendingArea } =
   useStore();
 
-let ownedProperty = ref(null);
 let properties = ref([]);
 let selectedProperty = ref("");
 const user = getLoggedUser();
@@ -81,7 +80,7 @@ const form = reactive({
 });
 
 const fieldForm = reactive({
-  ownedProperty,
+  ownedProperty: null,
   plantSpace: 0,
   roadSpace: 0,
 });
@@ -97,15 +96,19 @@ onMounted(async () => {
   }
 });
 
-const saveStats = async () => {
-  const pedingArea = getPedingArea();
+watch(selectedProperty, (newVal) => {
+  fieldForm.ownedProperty = newVal ? newVal.id : null;
+});
+
+const saveStats = () => {
+  const pending = getPendingArea();
   let payload =
     form.areaType === "field" ? { ...form, ...fieldForm } : { ...form };
 
   try {
     axios.post("http://localhost:3000/areas", {
       ...payload,
-      ...pedingArea,
+      ...pending,
     });
   } catch (err) {
     console.error("Erro ao salvar área:", err);

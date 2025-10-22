@@ -142,15 +142,10 @@ const confirmArea = () => {
     })),
   };
 
-  try {
-    setOpenFieldStats(true);
-    setPendingArea(payload);
-  } catch (err) {
-    console.error("Erro ao salvar área:", err);
-  } finally {
-    showModal.value = false;
-    currentArea.value = null;
-  }
+  setOpenFieldStats(true);
+  setPendingArea(payload);
+  showModal.value = false;
+  currentArea.value = null;
 };
 
 const deleteArea = () => {

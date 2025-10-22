@@ -23,7 +23,7 @@ const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
 const googleMap = ref(null);
 let mapInstance = ref(null);
-const { setSelectedArea, getSelectedArea, getLoggedUser } = useStore();
+const { setSelectedArea, getLoggedUser, setOpenDataEntry } = useStore();
 const user = getLoggedUser();
 
 const props = defineProps({
@@ -104,13 +104,8 @@ const loadAreas = async () => {
       polygon.setMap(mapInstance);
 
       google.maps.event.addListener(polygon, "click", () => {
-        const currentSelected = getSelectedArea();
-
-        if (currentSelected && currentSelected.id === area.id) {
-          setSelectedArea({ ...area, ...currentSelected });
-        } else {
-          setSelectedArea(area);
-        }
+        setSelectedArea(area);
+        setOpenDataEntry(true);
       });
 
       const originalOptions = {

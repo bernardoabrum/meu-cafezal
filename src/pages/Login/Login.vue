@@ -119,7 +119,6 @@ const createAccount = async () => {
     showRegister.value = false;
   } catch (err) {
     console.error("Erro ao criar conta:", err);
-    alert("Erro ao criar conta. Tente novamente.");
   }
 };
 </script>
