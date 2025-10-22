@@ -25,6 +25,7 @@ const googleMap = ref(null);
 let mapInstance = ref(null);
 const { setSelectedArea, getLoggedUser, setOpenDataEntry } = useStore();
 const user = getLoggedUser();
+const polygons = ref([]);
 
 const props = defineProps({
   focusedArea: Object,
@@ -49,7 +50,16 @@ watch(
     area.areaCords.forEach((coord) => {
       bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
     });
+
     mapInstance.fitBounds(bounds);
+
+    polygons.value.forEach(({ polygon, data }) => {
+      if (data.id === area.id) {
+        polygon.setOptions({ fillOpacity: 0.5, strokeWeight: 2 });
+      } else {
+        polygon.setOptions({ fillOpacity: 0.3, strokeWeight: 1 });
+      }
+    });
   }
 );
 
@@ -102,6 +112,7 @@ const loadAreas = async () => {
       });
 
       polygon.setMap(mapInstance);
+      polygons.value.push({ polygon, data: area });
 
       google.maps.event.addListener(polygon, "click", () => {
         setSelectedArea(area);
@@ -130,7 +141,6 @@ const loadAreas = async () => {
 };
 
 const getAreaColor = (areaType) => {
-  if (!areaType) return null;
   return areaType === "property" ? "#3357FF" : "#33FF57";
 };
 </script>

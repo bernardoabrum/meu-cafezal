@@ -1,11 +1,25 @@
 <template>
   <div class="cmp-data-entry">
     <div class="modal">
-      <div class="field-info">
+      <div v-if="selectedArea.areaType == 'field'">
+        <p>Talhão</p>
+        <h2>{{ selectedArea.areaName }}</h2>
         <p>Espaçamento rua: {{ selectedArea.roadSpace }}</p>
         <p>Espaçamento pé a pé: {{ selectedArea.plantSpace }}</p>
         <p>Tamanho da área: {{ selectedArea.areaSize.toFixed(0) }}m²</p>
-        <p>Número de plantas aproximado: {{ plantsNumer.toFixed(0) }}</p>
+        <p>
+          Número de plantas aproximado:
+          {{ selectedArea.plantsNumer.toFixed(0) }}
+        </p>
+      </div>
+      <div v-else>
+        <p>Propriedade</p>
+        <h2>{{ selectedArea.areaName }}</h2>
+        <p>Área total: {{ selectedArea.areaSize.toFixed(0) }}m²</p>
+        <p>Área cultivada total: {{ cultivatedArea.toFixed(0) }}m²</p>
+        <p>
+          Número de plantas total aproximado: {{ propertyPlants.toFixed(0) }}
+        </p>
       </div>
       <div class="buttons">
         <button @click="closeModal">Fechar</button>
@@ -24,13 +38,18 @@ import axios from "axios";
 const { setOpenDataEntry, getSelectedArea, setSelectedArea } = useStore();
 
 const selectedArea = getSelectedArea();
-const plantsNumer = ref(0);
+const propertyPlants = ref(0);
+const cultivatedArea = ref(0);
 
 onMounted(async () => {
-  if (selectedArea.areaType == "field") {
-    plantsNumer.value =
-      selectedArea.areaSize / selectedArea.plantSpace / selectedArea.roadSpace;
-  }
+  const { data } = await axios.get(`http://localhost:3000/areas`);
+  const propertyFields = data.filter(
+    (area) => area.ownedProperty === selectedArea.id
+  );
+  propertyFields.forEach((field) => {
+    propertyPlants.value += field.plantsNumer;
+    cultivatedArea.value += field.areaSize;
+  });
 });
 
 const closeModal = () => {

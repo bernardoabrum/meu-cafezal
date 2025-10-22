@@ -53,7 +53,7 @@
           </div>
         </div>
       </div>
-      <div class="button-container">
+      <div class="buttons">
         <button @click="saveStats">Salvar</button>
         <button @click="deleteArea">Cancelar</button>
       </div>
@@ -102,8 +102,20 @@ watch(selectedProperty, (newVal) => {
 
 const saveStats = () => {
   const pending = getPendingArea();
-  let payload =
-    form.areaType === "field" ? { ...form, ...fieldForm } : { ...form };
+  let payload = {};
+  const plantsNumer =
+    pending.areaSize / fieldForm.roadSpace / fieldForm.plantSpace;
+  if (form.areaType === "field") {
+    payload = {
+      ...form,
+      ...fieldForm,
+      plantsNumer,
+    };
+  } else {
+    payload = {
+      ...form,
+    };
+  }
 
   try {
     axios.post("http://localhost:3000/areas", {
