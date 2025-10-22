@@ -2,8 +2,9 @@
   <div class="cmp-data-entry">
     <div class="modal">
       <div class="field-info">
-        <p>Espaço da rua: {{ selectedArea.roadSpace }}</p>
-        <p>Espaço pé a pé: {{ selectedArea.plantSpace }}</p>
+        <p>Espaçamento rua: {{ selectedArea.roadSpace }}</p>
+        <p>Espaçamento pé a pé: {{ selectedArea.plantSpace }}</p>
+        <p>Tamanho da área: {{ selectedArea.areaSize.toFixed(0) }}m²</p>
         <p>Número de plantas aproximado: {{ plantsNumer.toFixed(0) }}</p>
       </div>
       <div class="buttons">

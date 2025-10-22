@@ -15,13 +15,6 @@
       map-type-id="hybrid"
       :libraries="['drawing', 'geometry']"
     />
-    <div class="modal">
-      <ModalConfirm
-        v-if="showModal"
-        @confirm="confirmArea"
-        @delete="deleteArea"
-      />
-    </div>
   </div>
 </template>
 
@@ -30,14 +23,11 @@ import "./Maps.scss";
 import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
-import { ModalConfirm } from "@/components";
 import { useStore } from "@/store";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
 const googleMap = ref(null);
-const showModal = ref(false);
-const currentArea = ref(null);
 const isDrawing = ref(false);
 let mapInstance = ref(null);
 let drawingManager = null;
@@ -90,10 +80,20 @@ const configMaps = () => {
   drawingManager.setMap(mapInstance);
 
   google.maps.event.addListener(drawingManager, "overlaycomplete", (event) => {
-    drawingManager.setDrawingMode(null);
-    currentArea.value = event.overlay;
-    showModal.value = true;
+    const path = event.overlay.getPath().getArray();
+    const areaSize = computeArea(path);
+    const payload = {
+      user: user.id,
+      areaSize,
+      areaCords: path.map((point) => ({
+        lat: point.lat(),
+        lng: point.lng(),
+      })),
+    };
     isDrawing.value = false;
+    drawingManager.setDrawingMode(null);
+    setPendingArea(payload);
+    setOpenFieldStats(true);
   });
 };
 
@@ -116,6 +116,10 @@ const loadAreas = async () => {
   }
 };
 
+const computeArea = (path) => {
+  return google.maps.geometry.spherical.computeArea(path);
+};
+
 const startDrawing = () => {
   isDrawing.value = true;
   drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
@@ -124,33 +128,5 @@ const startDrawing = () => {
 const stopDrawing = () => {
   isDrawing.value = false;
   drawingManager.setDrawingMode(null);
-};
-
-const computeArea = (path) => {
-  return google.maps.geometry.spherical.computeArea(path);
-};
-
-const confirmArea = () => {
-  const path = currentArea.value.getPath().getArray();
-  const areaSize = computeArea(path);
-  const payload = {
-    user: user.id,
-    areaSize,
-    areaCords: path.map((point) => ({
-      lat: point.lat(),
-      lng: point.lng(),
-    })),
-  };
-
-  setOpenFieldStats(true);
-  setPendingArea(payload);
-  showModal.value = false;
-  currentArea.value = null;
-};
-
-const deleteArea = () => {
-  showModal.value = false;
-  currentArea.value = null;
-  window.location.reload();
 };
 </script>

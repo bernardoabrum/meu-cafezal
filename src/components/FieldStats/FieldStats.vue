@@ -55,7 +55,7 @@
       </div>
       <div class="button-container">
         <button @click="saveStats">Salvar</button>
-        <button @click="deleteArea">Excluir área</button>
+        <button @click="deleteArea">Cancelar</button>
       </div>
     </div>
   </div>
