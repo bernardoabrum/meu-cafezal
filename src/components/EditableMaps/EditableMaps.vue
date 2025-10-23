@@ -55,9 +55,9 @@ watch(
 
     polygons.value.forEach(({ polygon, data }) => {
       if (data.id === area.id) {
-        polygon.setOptions({ fillOpacity: 0.5, strokeWeight: 2 });
+        setPolygonStyle(polygon, true);
       } else {
-        polygon.setOptions({ fillOpacity: 0.3, strokeWeight: 1 });
+        setPolygonStyle(polygon, false);
       }
     });
   }
@@ -119,20 +119,12 @@ const loadAreas = async () => {
         setOpenDataEntry(true);
       });
 
-      const originalOptions = {
-        strokeWeight: polygon.strokeWeight,
-        fillOpacity: polygon.fillOpacity,
-      };
-
       google.maps.event.addListener(polygon, "mouseover", () => {
-        polygon.setOptions({
-          fillOpacity: 0.5,
-          strokeWeight: 2,
-        });
+        setPolygonStyle(polygon, true);
       });
 
       google.maps.event.addListener(polygon, "mouseout", () => {
-        polygon.setOptions(originalOptions);
+        setPolygonStyle(polygon, false);
       });
     });
   } catch (err) {
@@ -142,5 +134,12 @@ const loadAreas = async () => {
 
 const getAreaColor = (areaType) => {
   return areaType === "property" ? "#3357FF" : "#33FF57";
+};
+
+const setPolygonStyle = (polygon, isActive = false) => {
+  polygon.setOptions({
+    fillOpacity: isActive ? 0.5 : 0.3,
+    strokeWeight: isActive ? 2 : 1,
+  });
 };
 </script>
