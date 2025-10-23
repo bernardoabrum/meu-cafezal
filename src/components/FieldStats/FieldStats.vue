@@ -3,7 +3,7 @@
     <div class="modal">
       <h2>FieldStats</h2>
       <div class="general-container">
-        <div class="checkbox">
+        <div class="checkbox" v-if="!Object.keys(selectedArea).length">
           <div>
             <input type="radio" value="property" v-model="form.areaType" />
             <span>Propriedade</span>
@@ -55,7 +55,10 @@
       </div>
       <div class="buttons">
         <button @click="saveStats">Salvar</button>
-        <button @click="deleteArea">Cancelar</button>
+        <button v-if="!Object.keys(selectedArea).length" @click="deleteArea">
+          Cancelar
+        </button>
+        <button v-else @click="closeModal">Fechar</button>
       </div>
     </div>
   </div>
@@ -73,6 +76,7 @@ const {
   getPendingArea,
   setPendingArea,
   getSelectedArea,
+  setSelectedArea,
 } = useStore();
 
 let properties = ref([]);
@@ -139,7 +143,7 @@ const saveStats = () => {
   }
 
   try {
-    if (Object.keys(pending).length > 0) {
+    if (!Object.keys(selectedArea).length) {
       axios.post("http://localhost:3000/areas", {
         ...payload,
         ...pending,
@@ -162,5 +166,10 @@ const saveStats = () => {
 
 const deleteArea = () => {
   window.location.reload();
+};
+
+const closeModal = () => {
+  setOpenFieldStats(false);
+  setSelectedArea({});
 };
 </script>
