@@ -9,7 +9,7 @@
         <p>Tamanho da área: {{ selectedArea.areaSize.toFixed(0) }}m²</p>
         <p>
           Número de plantas aproximado:
-          {{ selectedArea.plantsNumer.toFixed(0) }}
+          {{ selectedArea.plantsNumber.toFixed(0) }}
         </p>
       </div>
       <div v-else>
@@ -24,6 +24,7 @@
       <div class="buttons">
         <button @click="closeModal">Fechar</button>
         <button @click="deleteArea">Excluir área</button>
+        <button @click="editInfo">Editar informações</button>
       </div>
     </div>
   </div>
@@ -35,7 +36,12 @@ import "./DataEntry.scss";
 import { useStore } from "@/store";
 import axios from "axios";
 
-const { setOpenDataEntry, getSelectedArea, setSelectedArea } = useStore();
+const {
+  setOpenDataEntry,
+  getSelectedArea,
+  setSelectedArea,
+  setOpenFieldStats,
+} = useStore();
 
 const selectedArea = getSelectedArea();
 const propertyPlants = ref(0);
@@ -47,7 +53,7 @@ onMounted(async () => {
     (area) => area.ownedProperty === selectedArea.id
   );
   propertyFields.forEach((field) => {
-    propertyPlants.value += field.plantsNumer;
+    propertyPlants.value += field.plantsNumber;
     cultivatedArea.value += field.areaSize;
   });
 });
@@ -66,5 +72,10 @@ const deleteArea = () => {
   } catch (err) {
     console.error("Erro ao excluir área:", err);
   }
+};
+
+const editInfo = () => {
+  setOpenDataEntry(false);
+  setOpenFieldStats(true);
 };
 </script>

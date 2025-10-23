@@ -67,12 +67,18 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useStore } from "@/store";
 import axios from "axios";
 
-const { setOpenFieldStats, getLoggedUser, getPendingArea, setPendingArea } =
-  useStore();
+const {
+  setOpenFieldStats,
+  getLoggedUser,
+  getPendingArea,
+  setPendingArea,
+  getSelectedArea,
+} = useStore();
 
 let properties = ref([]);
 let selectedProperty = ref("");
 const user = getLoggedUser();
+const selectedArea = getSelectedArea();
 
 const form = reactive({
   areaName: "",
@@ -91,6 +97,20 @@ onMounted(async () => {
       `http://localhost:3000/areas?areaType=property&user=${user.id}`
     );
     properties.value = data;
+
+    if (selectedArea && Object.keys(selectedArea).length > 0) {
+      form.areaName = selectedArea.areaName;
+      form.areaType = selectedArea.areaType;
+
+      if (selectedArea.areaType === "field") {
+        fieldForm.roadSpace = selectedArea.roadSpace;
+        fieldForm.plantSpace = selectedArea.plantSpace;
+        fieldForm.ownedProperty = selectedArea.ownedProperty;
+
+        const prop = data.find((p) => p.id === selectedArea.ownedProperty);
+        if (prop) selectedProperty.value = prop;
+      }
+    }
   } catch (err) {
     console.error("Erro ao carregar propriedades:", err);
   }
@@ -103,13 +123,14 @@ watch(selectedProperty, (newVal) => {
 const saveStats = () => {
   const pending = getPendingArea();
   let payload = {};
-  const plantsNumer =
+  const plantsNumber =
     pending.areaSize / fieldForm.roadSpace / fieldForm.plantSpace;
+
   if (form.areaType === "field") {
     payload = {
       ...form,
       ...fieldForm,
-      plantsNumer,
+      plantsNumber,
     };
   } else {
     payload = {
@@ -118,10 +139,19 @@ const saveStats = () => {
   }
 
   try {
-    axios.post("http://localhost:3000/areas", {
-      ...payload,
-      ...pending,
-    });
+    if (Object.keys(pending).length > 0) {
+      axios.post("http://localhost:3000/areas", {
+        ...payload,
+        ...pending,
+      });
+    } else {
+      const plantsNumber =
+        selectedArea.areaSize / fieldForm.roadSpace / fieldForm.plantSpace;
+      axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
+        ...payload,
+        plantsNumber,
+      });
+    }
   } catch (err) {
     console.error("Erro ao salvar área:", err);
   }
