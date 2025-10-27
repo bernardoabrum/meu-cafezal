@@ -21,6 +21,44 @@
     overflow-x: hidden;
     gap: 30px;
 
+    .infos {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .name {
+        p {
+          font-size: 18px;
+        }
+      }
+
+      .register {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        gap: 10px;
+
+        .container {
+          display: flex;
+          gap: 20px;
+          align-items: center;
+
+          .send {
+            display: flex;
+            gap: 10px;
+          }
+        }
+
+        input {
+          width: 100px;
+        }
+
+        button {
+          width: 100px;
+        }
+      }
+    }
+
     .buttons {
       display: flex;
       gap: 20px;

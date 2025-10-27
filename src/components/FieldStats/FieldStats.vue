@@ -54,11 +54,11 @@
         </div>
       </div>
       <div class="buttons">
-        <button @click="saveStats">Salvar</button>
-        <button v-if="!Object.keys(selectedArea).length" @click="deleteArea">
-          Cancelar
+        <button v-if="Object.keys(selectedArea).length" @click="closeModal">
+          Fechar
         </button>
-        <button v-else @click="closeModal">Fechar</button>
+        <button @click="deleteArea">Excluir área</button>
+        <button @click="saveStats">Salvar</button>
       </div>
     </div>
   </div>
@@ -124,11 +124,14 @@ watch(selectedProperty, (newVal) => {
   fieldForm.ownedProperty = newVal ? newVal.id : null;
 });
 
-const saveStats = () => {
+const saveStats = async () => {
   const pending = getPendingArea();
   let payload = {};
+  const baseArea = Object.keys(pending).length > 0 ? pending : selectedArea;
   const plantsNumber =
-    pending.areaSize / fieldForm.roadSpace / fieldForm.plantSpace;
+    form.areaType === "field"
+      ? baseArea.areaSize / fieldForm.roadSpace / fieldForm.plantSpace
+      : 0;
 
   if (form.areaType === "field") {
     payload = {
@@ -139,22 +142,25 @@ const saveStats = () => {
   } else {
     payload = {
       ...form,
+      plantsNumber,
+      cultivatedArea: baseArea.cultivatedArea || 0,
     };
   }
 
   try {
     if (!Object.keys(selectedArea).length) {
-      axios.post("http://localhost:3000/areas", {
+      await axios.post("http://localhost:3000/areas", {
         ...payload,
         ...pending,
       });
     } else {
-      const plantsNumber =
-        selectedArea.areaSize / fieldForm.roadSpace / fieldForm.plantSpace;
-      axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
+      await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
         ...payload,
-        plantsNumber,
       });
+    }
+
+    if (form.areaType === "field") {
+      await recalculatePropertyStats(fieldForm.ownedProperty);
     }
   } catch (err) {
     console.error("Erro ao salvar área:", err);
@@ -164,8 +170,52 @@ const saveStats = () => {
   window.location.reload();
 };
 
-const deleteArea = () => {
-  window.location.reload();
+const recalculatePropertyStats = async (propertyId) => {
+  try {
+    const { data: fields } = await axios.get(
+      `http://localhost:3000/areas?ownedProperty=${propertyId}&areaType=field`
+    );
+
+    const totalPlants = fields.reduce(
+      (acc, field) => acc + (field.plantsNumber || 0),
+      0
+    );
+
+    const totalAreaSize = fields.reduce(
+      (acc, field) => acc + (field.areaSize || 0),
+      0
+    );
+
+    await axios.patch(`http://localhost:3000/areas/${propertyId}`, {
+      plantsNumber: totalPlants,
+      cultivatedArea: totalAreaSize,
+    });
+  } catch (err) {
+    console.error("Erro ao recalcular plantas da propriedade:", err);
+  }
+};
+
+const deleteArea = async () => {
+  if (!Object.keys(selectedArea).length) {
+    window.location.reload();
+    return;
+  }
+
+  try {
+    const ownedPropertyId = selectedArea?.ownedProperty;
+
+    await axios.delete(`http://localhost:3000/areas/${selectedArea.id}`);
+
+    if (selectedArea.areaType === "field" && ownedPropertyId) {
+      await recalculatePropertyStats(ownedPropertyId);
+    }
+    setOpenFieldStats(false);
+    setPendingArea({});
+    setSelectedArea({});
+    window.location.reload();
+  } catch (err) {
+    console.error("Erro ao excluir área:", err);
+  }
 };
 
 const closeModal = () => {
