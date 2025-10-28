@@ -79,10 +79,10 @@ const {
   setSelectedArea,
 } = useStore();
 
-let properties = ref([]);
-let selectedProperty = ref("");
 const user = getLoggedUser();
 const selectedArea = getSelectedArea();
+const properties = ref([]);
+const selectedProperty = ref("");
 
 const form = reactive({
   areaName: "",
@@ -102,17 +102,21 @@ onMounted(async () => {
     );
     properties.value = data;
 
-    if (selectedArea && Object.keys(selectedArea).length > 0) {
-      form.areaName = selectedArea.areaName;
-      form.areaType = selectedArea.areaType;
+    if (Object.keys(selectedArea).length) {
+      Object.assign(form, {
+        areaName: selectedArea.areaName,
+        areaType: selectedArea.areaType,
+      });
 
       if (selectedArea.areaType === "field") {
-        fieldForm.roadSpace = selectedArea.roadSpace;
-        fieldForm.plantSpace = selectedArea.plantSpace;
-        fieldForm.ownedProperty = selectedArea.ownedProperty;
-
-        const prop = data.find((p) => p.id === selectedArea.ownedProperty);
-        if (prop) selectedProperty.value = prop;
+        Object.assign(fieldForm, {
+          roadSpace: selectedArea.roadSpace,
+          plantSpace: selectedArea.plantSpace,
+          ownedProperty: selectedArea.ownedProperty,
+        });
+        selectedProperty.value = data.find(
+          (p) => p.id === selectedArea.ownedProperty
+        );
       }
     }
   } catch (err) {
@@ -121,31 +125,24 @@ onMounted(async () => {
 });
 
 watch(selectedProperty, (newVal) => {
-  fieldForm.ownedProperty = newVal ? newVal.id : null;
+  fieldForm.ownedProperty = newVal?.id || null;
 });
 
 const saveStats = async () => {
   const pending = getPendingArea();
-  let payload = {};
-  const baseArea = Object.keys(pending).length > 0 ? pending : selectedArea;
-  const plantsNumber =
-    form.areaType === "field"
-      ? baseArea.areaSize / fieldForm.roadSpace / fieldForm.plantSpace
-      : 0;
+  const base = Object.keys(pending).length ? pending : selectedArea;
+  const isField = form.areaType === "field";
 
-  if (form.areaType === "field") {
-    payload = {
-      ...form,
-      ...fieldForm,
-      plantsNumber,
-    };
-  } else {
-    payload = {
-      ...form,
-      plantsNumber,
-      cultivatedArea: baseArea.cultivatedArea || 0,
-    };
-  }
+  const plantsNumber = isField
+    ? base.areaSize / fieldForm.roadSpace / fieldForm.plantSpace
+    : 0;
+
+  const payload = {
+    ...form,
+    ...fieldForm,
+    plantsNumber,
+    cultivatedArea: isField ? undefined : base.cultivatedArea || 0,
+  };
 
   try {
     if (!Object.keys(selectedArea).length) {
@@ -159,8 +156,8 @@ const saveStats = async () => {
       });
     }
 
-    if (form.areaType === "field") {
-      await recalculatePropertyStats(fieldForm.ownedProperty);
+    if (isField && fieldForm.ownedProperty) {
+      await updatePropertyStats(fieldForm.ownedProperty);
     }
   } catch (err) {
     console.error("Erro ao salvar área:", err);
@@ -170,28 +167,26 @@ const saveStats = async () => {
   window.location.reload();
 };
 
-const recalculatePropertyStats = async (propertyId) => {
+const updatePropertyStats = async (propertyId) => {
   try {
     const { data: fields } = await axios.get(
       `http://localhost:3000/areas?ownedProperty=${propertyId}&areaType=field`
     );
 
-    const totalPlants = fields.reduce(
-      (acc, field) => acc + (field.plantsNumber || 0),
-      0
-    );
-
-    const totalAreaSize = fields.reduce(
-      (acc, field) => acc + (field.areaSize || 0),
-      0
+    const totals = fields.reduce(
+      (acc, f) => ({
+        plants: acc.plants + (f.plantsNumber || 0),
+        area: acc.area + (f.areaSize || 0),
+      }),
+      { plants: 0, area: 0 }
     );
 
     await axios.patch(`http://localhost:3000/areas/${propertyId}`, {
-      plantsNumber: totalPlants,
-      cultivatedArea: totalAreaSize,
+      plantsNumber: totals.plants,
+      cultivatedArea: totals.area,
     });
   } catch (err) {
-    console.error("Erro ao recalcular plantas da propriedade:", err);
+    console.error("Erro ao recalcular estatísticas:", err);
   }
 };
 
@@ -207,7 +202,7 @@ const deleteArea = async () => {
     await axios.delete(`http://localhost:3000/areas/${selectedArea.id}`);
 
     if (selectedArea.areaType === "field" && ownedPropertyId) {
-      await recalculatePropertyStats(ownedPropertyId);
+      await updatePropertyStats(ownedPropertyId);
     }
     setOpenFieldStats(false);
     setPendingArea({});
