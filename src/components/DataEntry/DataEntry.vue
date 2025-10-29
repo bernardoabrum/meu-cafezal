@@ -36,13 +36,13 @@
         <p>Lançar quantidade de volumes produzidos</p>
         <div class="send">
           <input
-            v-model="productionVolumes"
+            v-model="currentProduction"
             type="number"
             min="0"
             placeholder="0"
             @input="
               (e) => {
-                if (e.target.value < 0) e.target.value = productionVolumes = 0;
+                if (e.target.value < 0) e.target.value = currentProduction = 0;
               }
             "
           />
@@ -52,9 +52,7 @@
           <p>
             Total lançado:
             <span v-if="showVolumes">
-              {{
-                selectedArea.productionVolumes?.[new Date().getFullYear()] || 0
-              }}
+              {{ selectedArea.production?.[new Date().getFullYear()] || 0 }}
             </span>
             <span v-else>
               <input
@@ -64,8 +62,7 @@
                 placeholder="0"
                 @input="
                   (e) => {
-                    if (e.target.value < 0)
-                      e.target.value = productionVolumes = 0;
+                    if (e.target.value < 0) e.target.value = currentProduction = 0;
                   }
                 "
               />
@@ -102,35 +99,29 @@ const {
   setOpenFieldStats,
 } = useStore();
 const selectedArea = getSelectedArea();
-const productionVolumes = ref(0);
+const currentProduction = ref(0);
 const showVolumes = ref(true);
 const revisedValue = ref(0);
 
 const sendValue = async () => {
   const currentYear = new Date().getFullYear();
-  const newValue = Math.max(0, Number(productionVolumes.value));
+  const newValue = Math.max(0, Number(currentProduction.value));
 
   try {
-    // garante que o campo é um objeto
-    const existingVolumes = selectedArea.productionVolumes || {};
-
-    // cria uma cópia do objeto atual
+    const existingVolumes = selectedArea.production || {};
     const updatedVolumes = { ...existingVolumes };
 
-    // soma o novo valor no ano atual
     updatedVolumes[currentYear] = (updatedVolumes[currentYear] || 0) + newValue;
 
-    // salva no banco
     await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
-      productionVolumes: updatedVolumes,
+      production: updatedVolumes,
     });
 
-    // atualiza localmente
-    selectedArea.productionVolumes = updatedVolumes;
+    selectedArea.production = updatedVolumes;
   } catch (err) {
     console.error("Erro ao lançar quantidade de volumes:", err);
   } finally {
-    productionVolumes.value = 0;
+    currentProduction.value = 0;
   }
 };
 
@@ -138,22 +129,22 @@ const reviseVolumes = async () => {
   const currentYear = new Date().getFullYear();
 
   if (showVolumes.value) {
-    revisedValue.value = selectedArea.productionVolumes?.[currentYear] || 0;
+    revisedValue.value = selectedArea.production?.[currentYear] || 0;
     showVolumes.value = false;
   } else {
     const updatedValue = Math.max(0, Number(revisedValue.value));
 
     try {
       const updatedVolumes = {
-        ...(selectedArea.productionVolumes || {}),
+        ...(selectedArea.production || {}),
         [currentYear]: updatedValue,
       };
 
       await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
-        productionVolumes: updatedVolumes,
+        production: updatedVolumes,
       });
 
-      selectedArea.productionVolumes = updatedVolumes;
+      selectedArea.production = updatedVolumes;
     } catch (err) {
       console.error("Erro ao atualizar volume:", err);
     } finally {
