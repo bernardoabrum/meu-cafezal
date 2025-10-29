@@ -18,8 +18,8 @@
       "id": "cbb8",
       "areaName": "Seminário",
       "areaType": "property",
-      "plantsNumber": 3498.1618185295397,
-      "cultivatedArea": 10494.48545558862,
+      "plantsNumber": 5495.079183930445,
+      "cultivatedArea": 19480.61359989269,
       "user": "9b34",
       "areaSize": 68106.773436815,
       "areaCords": [
@@ -68,7 +68,46 @@
           "lat": -20.597956869709638,
           "lng": -42.13157774401866
         }
-      ]
+      ],
+      "productionVolumes": 120
+    },
+    {
+      "id": "74b0",
+      "areaName": "teste",
+      "areaType": "field",
+      "ownedProperty": "cbb8",
+      "plantSpace": 1.5,
+      "roadSpace": 3,
+      "plantsNumber": 1996.9173654009053,
+      "user": "9b34",
+      "areaSize": 8986.128144304073,
+      "areaCords": [
+        {
+          "lat": -20.596307797523696,
+          "lng": -42.1310028555804
+        },
+        {
+          "lat": -20.596920423717517,
+          "lng": -42.13136763600642
+        },
+        {
+          "lat": -20.597050983079967,
+          "lng": -42.13062734631831
+        },
+        {
+          "lat": -20.596548831074017,
+          "lng": -42.12976903943355
+        },
+        {
+          "lat": -20.596167194443364,
+          "lng": -42.13041276959712
+        },
+        {
+          "lat": -20.596408228215967,
+          "lng": -42.13075609235103
+        }
+      ],
+      "productionVolumes": 110
     }
   ]
 }
