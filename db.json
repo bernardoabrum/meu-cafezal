@@ -69,7 +69,11 @@
           "lng": -42.13157774401866
         }
       ],
-      "productionVolumes": 120
+      "productionVolumes": {
+        "2023": 53,
+        "2024": 42,
+        "2025": 48
+      }
     },
     {
       "id": "74b0",
@@ -107,7 +111,9 @@
           "lng": -42.13075609235103
         }
       ],
-      "productionVolumes": 110
+      "productionVolumes": {
+        "2025": 47
+      }
     }
   ]
 }

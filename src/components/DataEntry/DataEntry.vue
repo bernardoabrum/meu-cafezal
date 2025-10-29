@@ -52,7 +52,9 @@
           <p>
             Total lançado:
             <span v-if="showVolumes">
-              {{ selectedArea.productionVolumes || 0 }}
+              {{
+                selectedArea.productionVolumes?.[new Date().getFullYear()] || 0
+              }}
             </span>
             <span v-else>
               <input
@@ -105,15 +107,26 @@ const showVolumes = ref(true);
 const revisedValue = ref(0);
 
 const sendValue = async () => {
+  const currentYear = new Date().getFullYear();
   const newValue = Math.max(0, Number(productionVolumes.value));
-  try {
-    const updatedValue = (selectedArea.productionVolumes || 0) + newValue;
 
+  try {
+    // garante que o campo é um objeto
+    const existingVolumes = selectedArea.productionVolumes || {};
+
+    // cria uma cópia do objeto atual
+    const updatedVolumes = { ...existingVolumes };
+
+    // soma o novo valor no ano atual
+    updatedVolumes[currentYear] = (updatedVolumes[currentYear] || 0) + newValue;
+
+    // salva no banco
     await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
-      productionVolumes: updatedValue,
+      productionVolumes: updatedVolumes,
     });
 
-    selectedArea.productionVolumes = updatedValue;
+    // atualiza localmente
+    selectedArea.productionVolumes = updatedVolumes;
   } catch (err) {
     console.error("Erro ao lançar quantidade de volumes:", err);
   } finally {
@@ -122,18 +135,25 @@ const sendValue = async () => {
 };
 
 const reviseVolumes = async () => {
+  const currentYear = new Date().getFullYear();
+
   if (showVolumes.value) {
-    revisedValue.value = selectedArea.productionVolumes || 0;
+    revisedValue.value = selectedArea.productionVolumes?.[currentYear] || 0;
     showVolumes.value = false;
   } else {
     const updatedValue = Math.max(0, Number(revisedValue.value));
 
     try {
+      const updatedVolumes = {
+        ...(selectedArea.productionVolumes || {}),
+        [currentYear]: updatedValue,
+      };
+
       await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
-        productionVolumes: updatedValue,
+        productionVolumes: updatedVolumes,
       });
 
-      selectedArea.productionVolumes = updatedValue;
+      selectedArea.productionVolumes = updatedVolumes;
     } catch (err) {
       console.error("Erro ao atualizar volume:", err);
     } finally {
