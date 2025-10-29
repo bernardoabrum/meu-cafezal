@@ -62,7 +62,8 @@
                 placeholder="0"
                 @input="
                   (e) => {
-                    if (e.target.value < 0) e.target.value = currentProduction = 0;
+                    if (e.target.value < 0)
+                      e.target.value = currentProduction = 0;
                   }
                 "
               />
@@ -110,7 +111,6 @@ const sendValue = async () => {
   try {
     const existingVolumes = selectedArea.production || {};
     const updatedVolumes = { ...existingVolumes };
-
     updatedVolumes[currentYear] = (updatedVolumes[currentYear] || 0) + newValue;
 
     await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
@@ -118,6 +118,7 @@ const sendValue = async () => {
     });
 
     selectedArea.production = updatedVolumes;
+    await updatePropertyProduction(selectedArea.ownedProperty, currentYear);
   } catch (err) {
     console.error("Erro ao lançar quantidade de volumes:", err);
   } finally {
@@ -145,11 +146,39 @@ const reviseVolumes = async () => {
       });
 
       selectedArea.production = updatedVolumes;
+      await updatePropertyProduction(selectedArea.ownedProperty, currentYear);
     } catch (err) {
-      console.error("Erro ao atualizar volume:", err);
+      console.error("Erro ao corrigir quantidade de volumes:", err);
     } finally {
       showVolumes.value = true;
     }
+  }
+};
+
+const updatePropertyProduction = async (propertyId, year) => {
+  try {
+    const { data: allFields } = await axios.get(
+      `http://localhost:3000/areas?areaType=field&ownedProperty=${propertyId}`
+    );
+
+    const totalProduction = allFields.reduce((acc, field) => {
+      return acc + (field.production?.[year] || 0);
+    }, 0);
+
+    const { data: property } = await axios.get(
+      `http://localhost:3000/areas/${propertyId}`
+    );
+
+    const updatedProductions = {
+      ...(property.production || {}),
+      [year]: totalProduction,
+    };
+
+    await axios.patch(`http://localhost:3000/areas/${property.id}`, {
+      production: updatedProductions,
+    });
+  } catch (err) {
+    console.error("Erro ao atualizar produção da propriedade:", err);
   }
 };
 

@@ -11,8 +11,9 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "./BackButton.scss";
+import router from "@/router";
 
 const goBack = () => {
-  window.history.back();
+  window.history.back() || router.push("/home");
 };
 </script>

@@ -68,16 +68,11 @@
           "lat": -20.597956869709638,
           "lng": -42.13157774401866
         }
-      ],
-      "productionVolumes": {
-        "2023": 53,
-        "2024": 42,
-        "2025": 48
-      }
+      ]
     },
     {
       "id": "74b0",
-      "areaName": "teste",
+      "areaName": "Catuaí",
       "areaType": "field",
       "ownedProperty": "cbb8",
       "plantSpace": 1.5,
@@ -110,10 +105,7 @@
           "lat": -20.596408228215967,
           "lng": -42.13075609235103
         }
-      ],
-      "productionVolumes": {
-        "2025": 47
-      }
+      ]
     }
   ]
 }
