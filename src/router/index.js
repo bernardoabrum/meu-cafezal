@@ -25,6 +25,11 @@ const router = createRouter({
       component: pages.Visualize,
     },
     {
+      path: "/statistics",
+      name: "Statistics",
+      component: pages.Statistics,
+    },
+    {
       path: "/login",
       name: "Login",
       component: pages.Login,

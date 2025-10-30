@@ -30,6 +30,10 @@
             Número de plantas total aproximado:
             {{ selectedArea.plantsNumber.toFixed(0) }}
           </p>
+          <p>
+            Total de volumes colhidos registrados ({{ new Date().getFullYear() }}):
+            {{ selectedArea.production?.[new Date().getFullYear()] || 0 }}
+          </p>
         </div>
       </div>
       <div class="register" v-if="selectedArea.areaType == 'field'">
@@ -50,7 +54,7 @@
         </div>
         <div class="revise">
           <p>
-            Total lançado:
+            Total lançado ({{ new Date().getFullYear() }}): 
             <span v-if="showVolumes">
               {{ selectedArea.production?.[new Date().getFullYear()] || 0 }}
             </span>

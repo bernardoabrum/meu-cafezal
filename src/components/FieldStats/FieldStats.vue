@@ -144,6 +144,12 @@ const saveStats = async () => {
     cultivatedArea: isField ? undefined : base.cultivatedArea || 0,
   };
 
+  if (!isField) {
+    delete payload.ownedProperty;
+    delete payload.roadSpace;
+    delete payload.plantSpace;
+  }
+
   try {
     if (!Object.keys(selectedArea).length) {
       await axios.post("http://localhost:3000/areas", {
