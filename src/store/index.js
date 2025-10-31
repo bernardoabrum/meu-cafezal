@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import axios from "axios";
 
 const store = createStore({
   state: {
@@ -42,6 +43,34 @@ const store = createStore({
         commit("setLoggedUser", savedUser);
       }
     },
+    async updatePropertyProduction(context, { propertyId }) {
+      const currentYear = new Date().getFullYear();
+
+      try {
+        const { data: allFields } = await axios.get(
+          `http://localhost:3000/areas?areaType=field&ownedProperty=${propertyId}`
+        );
+
+        const totalProduction = allFields.reduce((acc, field) => {
+          return acc + (field.production?.[currentYear] || 0);
+        }, 0);
+
+        const { data: property } = await axios.get(
+          `http://localhost:3000/areas/${propertyId}`
+        );
+
+        const updatedProductions = {
+          ...(property.production || {}),
+          [currentYear]: totalProduction,
+        };
+
+        await axios.patch(`http://localhost:3000/areas/${property.id}`, {
+          production: updatedProductions,
+        });
+      } catch (err) {
+        console.error("Erro ao atualizar produção da propriedade:", err);
+      }
+    },
   },
   getters: {
     getOpenDataEntry(state) {
@@ -77,6 +106,8 @@ export const useStore = () => {
   const getPendingArea = () => store.state.pendingArea;
   const setOpenDataEntry = (value) => store.commit("setOpenDataEntry", value);
   const getOpenDataEntry = () => store.state.openDataEntry;
+  const updatePropertyProduction = (propertyId) =>
+    store.dispatch("updatePropertyProduction", { propertyId });
 
   return {
     setOpenFieldStats,
@@ -90,6 +121,7 @@ export const useStore = () => {
     getPendingArea,
     setOpenDataEntry,
     getOpenDataEntry,
+    updatePropertyProduction,
   };
 };
 

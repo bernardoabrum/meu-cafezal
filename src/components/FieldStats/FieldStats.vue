@@ -77,6 +77,7 @@ const {
   setPendingArea,
   getSelectedArea,
   setSelectedArea,
+  updatePropertyProduction,
 } = useStore();
 
 const user = getLoggedUser();
@@ -209,6 +210,7 @@ const deleteArea = async () => {
 
     if (selectedArea.areaType === "field" && ownedPropertyId) {
       await updatePropertyStats(ownedPropertyId);
+      await updatePropertyProduction(ownedPropertyId);
     }
     setOpenFieldStats(false);
     setPendingArea({});

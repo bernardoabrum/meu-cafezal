@@ -15,7 +15,7 @@
 <script setup>
 import "./EditableMaps.scss";
 import axios from "axios";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, defineProps } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
 
@@ -105,8 +105,8 @@ const loadAreas = async () => {
     data.forEach((area) => {
       const polygon = new google.maps.Polygon({
         paths: area.areaCords,
-        fillColor: getAreaColor(area.areaType),
-        strokeColor: getAreaColor(area.areaType),
+        fillColor: area.areaType === "property" ? "#3357FF" : "#33FF57",
+        strokeColor: area.areaType === "property" ? "#3357FF" : "#33FF57",
         fillOpacity: 0.3,
         strokeWeight: 1,
       });
@@ -120,10 +120,9 @@ const loadAreas = async () => {
             `http://localhost:3000/areas/${area.id}`
           );
           setSelectedArea(freshArea);
+          setOpenDataEntry(true);
         } catch (err) {
           console.error(err);
-        } finally {
-          setOpenDataEntry(true);
         }
       });
 
@@ -138,10 +137,6 @@ const loadAreas = async () => {
   } catch (err) {
     console.error("Erro ao carregar áreas:", err);
   }
-};
-
-const getAreaColor = (areaType) => {
-  return areaType === "property" ? "#3357FF" : "#33FF57";
 };
 
 const setPolygonStyle = (polygon, isActive = false) => {

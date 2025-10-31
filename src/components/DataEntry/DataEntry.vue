@@ -46,6 +46,7 @@
             type="number"
             min="0"
             placeholder="0"
+            @wheel.prevent
             @input="
               (e) => {
                 if (e.target.value < 0) e.target.value = currentProduction = 0;
@@ -104,6 +105,7 @@ const {
   getSelectedArea,
   setSelectedArea,
   setOpenFieldStats,
+  updatePropertyProduction,
 } = useStore();
 const selectedArea = getSelectedArea();
 const currentProduction = ref(0);
@@ -124,7 +126,7 @@ const sendValue = async () => {
     });
 
     selectedArea.production = updatedVolumes;
-    updatePropertyProduction(selectedArea.ownedProperty, currentYear);
+    updatePropertyProduction(selectedArea.ownedProperty);
   } catch (err) {
     console.error("Erro ao lançar quantidade de volumes:", err);
   } finally {
@@ -152,39 +154,12 @@ const reviseVolumes = async () => {
       });
 
       selectedArea.production = updatedVolumes;
-      await updatePropertyProduction(selectedArea.ownedProperty, currentYear);
+      updatePropertyProduction(selectedArea.ownedProperty);
     } catch (err) {
       console.error("Erro ao corrigir quantidade de volumes:", err);
     } finally {
       showVolumes.value = true;
     }
-  }
-};
-
-const updatePropertyProduction = async (propertyId, year) => {
-  try {
-    const { data: allFields } = await axios.get(
-      `http://localhost:3000/areas?areaType=field&ownedProperty=${propertyId}`
-    );
-
-    const totalProduction = allFields.reduce((acc, field) => {
-      return acc + (field.production?.[year] || 0);
-    }, 0);
-
-    const { data: property } = await axios.get(
-      `http://localhost:3000/areas/${propertyId}`
-    );
-
-    const updatedProductions = {
-      ...(property.production || {}),
-      [year]: totalProduction,
-    };
-
-    await axios.patch(`http://localhost:3000/areas/${property.id}`, {
-      production: updatedProductions,
-    });
-  } catch (err) {
-    console.error("Erro ao atualizar produção da propriedade:", err);
   }
 };
 
