@@ -31,7 +31,9 @@
             {{ selectedArea.plantsNumber.toFixed(0) }}
           </p>
           <p>
-            Total de volumes colhidos registrados ({{ new Date().getFullYear() }}):
+            Total de volumes colhidos registrados ({{
+              new Date().getFullYear()
+            }}):
             {{ selectedArea.production?.[new Date().getFullYear()] || 0 }}
           </p>
         </div>
@@ -122,7 +124,7 @@ const sendValue = async () => {
     });
 
     selectedArea.production = updatedVolumes;
-    await updatePropertyProduction(selectedArea.ownedProperty, currentYear);
+    updatePropertyProduction(selectedArea.ownedProperty, currentYear);
   } catch (err) {
     console.error("Erro ao lançar quantidade de volumes:", err);
   } finally {

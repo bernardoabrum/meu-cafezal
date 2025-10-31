@@ -114,9 +114,17 @@ const loadAreas = async () => {
       polygon.setMap(mapInstance);
       polygons.value.push({ polygon, data: area });
 
-      google.maps.event.addListener(polygon, "click", () => {
-        setSelectedArea(area);
-        setOpenDataEntry(true);
+      google.maps.event.addListener(polygon, "click", async () => {
+        try {
+          const { data: freshArea } = await axios.get(
+            `http://localhost:3000/areas/${area.id}`
+          );
+          setSelectedArea(freshArea);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setOpenDataEntry(true);
+        }
       });
 
       google.maps.event.addListener(polygon, "mouseover", () => {
