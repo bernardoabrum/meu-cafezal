@@ -57,7 +57,7 @@
         </div>
         <div class="revise">
           <p>
-            Total lançado ({{ new Date().getFullYear() }}): 
+            Total lançado ({{ new Date().getFullYear() }}):
             <span v-if="showVolumes">
               {{ selectedArea.production?.[new Date().getFullYear()] || 0 }}
             </span>
@@ -67,6 +67,7 @@
                 type="number"
                 min="0"
                 placeholder="0"
+                @wheel.prevent
                 @input="
                   (e) => {
                     if (e.target.value < 0)
