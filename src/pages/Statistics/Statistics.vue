@@ -13,6 +13,9 @@
     <div v-if="years.length > 1">
       <LineChart :chartData="productionTotals" />
     </div>
+    <div v-else>
+      <p>Continue lançando no próximo ano para ver o grafíco de evolução</p>
+    </div>
   </div>
 </template>
 
