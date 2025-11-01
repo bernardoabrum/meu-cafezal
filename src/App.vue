@@ -22,4 +22,8 @@ body,
   font-family: Arial, Helvetica, sans-serif;
   font-size: 24px;
 }
+
+.page {
+  margin: 0 60px;
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="visualize-page">
+  <div class="page visualize-page">
     <BackButton />
     <EditableMaps :focusedArea="focusedArea" />
     <Sidebar @focusArea="putFocus" />

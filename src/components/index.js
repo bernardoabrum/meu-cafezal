@@ -7,6 +7,7 @@ import BackButton from "./BackButton/BackButton.vue";
 import EditableMaps from "./EditableMaps/EditableMaps.vue";
 import DataEntry from "./DataEntry/DataEntry.vue";
 import LineChart from "./LineChart/LineChart.vue";
+import PieChart from "./PieChart/PieChart.vue";
 
 export {
   Maps,
@@ -18,4 +19,5 @@ export {
   EditableMaps,
   DataEntry,
   LineChart,
+  PieChart,
 };

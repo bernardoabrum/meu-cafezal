@@ -15,7 +15,7 @@
 <script setup>
 import "./EditableMaps.scss";
 import axios from "axios";
-import { ref, onMounted, watch, defineProps } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
 

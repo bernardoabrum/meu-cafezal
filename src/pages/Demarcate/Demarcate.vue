@@ -1,5 +1,5 @@
 <template>
-  <div class="demarcate-page">
+  <div class="page demarcate-page">
     <BackButton />
     <Maps />
     <FieldStats v-if="getOpenFieldStats()" />
