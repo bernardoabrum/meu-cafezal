@@ -6,7 +6,7 @@
 
 <script setup>
 import "./LineChart.scss";
-import { defineProps, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { Line } from "vue-chartjs";
 import { Chart, registerables } from "chart.js";
 
@@ -21,13 +21,50 @@ const chartOptions = ref({
   maintainAspectRatio: false,
   plugins: {
     legend: { display: false },
-    tooltip: { mode: "index", intersect: false },
+    tooltip: {
+      mode: "index",
+      intersect: false,
+      displayColors: false,
+      padding: 12,
+      titleFont: {
+        size: 20,
+        weight: "500",
+      },
+      bodyFont: {
+        size: 20,
+        weight: "500",
+      },
+    },
   },
   scales: {
-    x: { title: { display: true, text: "Ano" } },
+    x: {
+      title: {
+        display: true,
+        text: "Ano",
+        font: {
+          size: 18,
+        },
+      },
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
+    },
     y: {
       beginAtZero: true,
-      title: { display: true, text: "Volumes" },
+      title: {
+        display: true,
+        text: "Volumes",
+        font: {
+          size: 18,
+        },
+      },
+      ticks: {
+        font: {
+          size: 14,
+        },
+      },
     },
   },
 });

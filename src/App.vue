@@ -24,6 +24,6 @@ body,
 }
 
 .page {
-  margin: 0 60px;
+  margin: 40px 60px;
 }
 </style>
