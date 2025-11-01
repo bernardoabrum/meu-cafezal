@@ -1,7 +1,7 @@
 <template>
   <div class="page statistics-page">
     <BackButton />
-    <div v-if="properties.length">
+    <div v-if="registeredYears.length">
       <div class="select">
         <select v-model="selectedYear" name="selectedYear">
           <option disabled value="">Selecione um ano</option>
@@ -75,7 +75,10 @@
       </div>
     </div>
     <div v-else class="no-properties">
-      <h2>Você precisa marcar propriedades para ter acesso as estatísticas!</h2>
+      <h2>
+        Você precisa marcar propriedades ou registrar volumes para ter acesso as
+        estatísticas!
+      </h2>
     </div>
   </div>
 </template>
