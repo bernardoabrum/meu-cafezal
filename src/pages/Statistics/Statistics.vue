@@ -10,7 +10,7 @@
       </select>
     </div>
     <div class="infos">
-      <div>
+      <div class="totals">
         <h2 class="title">Estatísticas gerais ({{ selectedYear }})</h2>
         <p>
           Produção total em volumes:

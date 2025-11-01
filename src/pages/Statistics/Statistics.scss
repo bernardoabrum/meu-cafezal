@@ -20,16 +20,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 60px;
+    gap: 50px;
     flex-wrap: wrap;
     margin: 50px 0;
 
-    p {
-      margin-bottom: 10px;
-    }
+    .totals {
+      width: 480px;
 
-    span {
-      font-weight: 600;
+      p {
+        margin-bottom: 10px;
+      }
+
+      span {
+        font-weight: 600;
+      }
     }
 
     .line-chart {
