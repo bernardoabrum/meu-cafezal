@@ -1,5 +1,5 @@
 <template>
-  <div class="page login-page">
+  <div class="login-page">
     <div class="container">
       <div v-if="!showRegister" class="login">
         <h1>Login</h1>
