@@ -31,10 +31,8 @@
             {{ selectedArea.plantsNumber.toFixed(0) }}
           </p>
           <p>
-            Total de volumes colhidos registrados ({{
-              new Date().getFullYear()
-            }}):
-            {{ selectedArea.production?.[new Date().getFullYear()] || 0 }}
+            Total de volumes colhidos registrados ({{ currentYear }}):
+            {{ selectedArea.production?.[currentYear] || 0 }}
           </p>
         </div>
       </div>
@@ -57,9 +55,9 @@
         </div>
         <div class="revise">
           <p>
-            Total lançado ({{ new Date().getFullYear() }}):
+            Total lançado ({{ currentYear }}):
             <span v-if="showVolumes">
-              {{ selectedArea.production?.[new Date().getFullYear()] || 0 }}
+              {{ selectedArea.production?.[currentYear] || 0 }}
             </span>
             <span v-else>
               <input
@@ -112,10 +110,11 @@ const selectedArea = getSelectedArea();
 const currentProduction = ref(0);
 const showVolumes = ref(true);
 const revisedValue = ref(0);
+const currentYear = new Date().getFullYear();
 
 const sendValue = async () => {
-  const currentYear = new Date().getFullYear();
   const newValue = Math.max(0, Number(currentProduction.value));
+  const propertyId = selectedArea.ownedProperty;
 
   try {
     const existingVolumes = selectedArea.production || {};
@@ -127,7 +126,7 @@ const sendValue = async () => {
     });
 
     selectedArea.production = updatedVolumes;
-    updatePropertyProduction(selectedArea.ownedProperty);
+    updatePropertyProduction(propertyId, currentYear);
   } catch (err) {
     console.error("Erro ao lançar quantidade de volumes:", err);
   } finally {
@@ -136,7 +135,7 @@ const sendValue = async () => {
 };
 
 const reviseVolumes = async () => {
-  const currentYear = new Date().getFullYear();
+  const propertyId = selectedArea.ownedProperty;
 
   if (showVolumes.value) {
     revisedValue.value = selectedArea.production?.[currentYear] || 0;
@@ -155,7 +154,7 @@ const reviseVolumes = async () => {
       });
 
       selectedArea.production = updatedVolumes;
-      updatePropertyProduction(selectedArea.ownedProperty);
+      updatePropertyProduction(propertyId, currentYear);
     } catch (err) {
       console.error("Erro ao corrigir quantidade de volumes:", err);
     } finally {

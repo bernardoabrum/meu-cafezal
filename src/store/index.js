@@ -43,9 +43,7 @@ const store = createStore({
         commit("setLoggedUser", savedUser);
       }
     },
-    async updatePropertyProduction(context, { propertyId }) {
-      const currentYear = new Date().getFullYear();
-
+    async updatePropertyProduction(context, { propertyId, currentYear }) {
       try {
         const { data: allFields } = await axios.get(
           `http://localhost:3000/areas?areaType=field&ownedProperty=${propertyId}`
@@ -106,8 +104,8 @@ export const useStore = () => {
   const getPendingArea = () => store.state.pendingArea;
   const setOpenDataEntry = (value) => store.commit("setOpenDataEntry", value);
   const getOpenDataEntry = () => store.state.openDataEntry;
-  const updatePropertyProduction = (propertyId) =>
-    store.dispatch("updatePropertyProduction", { propertyId });
+  const updatePropertyProduction = (propertyId, currentYear) =>
+    store.dispatch("updatePropertyProduction", { propertyId, currentYear });
 
   return {
     setOpenFieldStats,
