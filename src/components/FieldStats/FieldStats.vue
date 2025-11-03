@@ -133,6 +133,7 @@ const saveStats = async () => {
   const pending = getPendingArea();
   const base = Object.keys(pending).length ? pending : selectedArea;
   const isField = form.areaType === "field";
+  const currentYear = new Date().getFullYear().toString();
 
   const plantsNumber = isField
     ? base.areaSize / fieldForm.roadSpace / fieldForm.plantSpace
@@ -143,6 +144,7 @@ const saveStats = async () => {
     ...fieldForm,
     plantsNumber,
     cultivatedArea: isField ? undefined : base.cultivatedArea || 0,
+    year: currentYear,
   };
 
   if (!isField) {

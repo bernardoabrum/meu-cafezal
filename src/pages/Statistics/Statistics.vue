@@ -14,6 +14,14 @@
         <div class="totals">
           <h2 class="title">Estatísticas gerais ({{ selectedYear }})</h2>
           <p>
+            Numéro total de plantas:
+            <span>{{ totalPlantsByYear.toFixed() }}</span>
+          </p>
+          <p>
+            Área cultivada total:
+            <span>{{ cultivatedAreaByYear.toFixed() }}m²</span>
+          </p>
+          <p>
             Produção total em volumes:
             <span>{{ totalProduction[selectedYear] || 0 }}</span>
           </p>
@@ -106,6 +114,34 @@ onMounted(async () => {
   }
 });
 
+const cultivatedAreaByYear = computed(() => {
+  const year = Number(selectedYear.value);
+  return properties.value.reduce((acc, property) => {
+    const fieldsUpToYear = property.fields.filter(
+      (field) => Number(field.year) <= year
+    );
+    const propertyTotal = fieldsUpToYear.reduce(
+      (sum, field) => sum + (field.areaSize || 0),
+      0
+    );
+    return acc + propertyTotal;
+  }, 0);
+});
+
+const totalPlantsByYear = computed(() => {
+  const year = Number(selectedYear.value);
+  return properties.value.reduce((acc, property) => {
+    const fieldsUpToYear = property.fields.filter(
+      (field) => Number(field.year) <= year
+    );
+    const propertyTotal = fieldsUpToYear.reduce(
+      (sum, field) => sum + Number(field.plantsNumber || 0),
+      0
+    );
+    return acc + propertyTotal;
+  }, 0);
+});
+
 const getData = async () => {
   try {
     const { data: propertiesData } = await axios.get(
@@ -146,11 +182,11 @@ const getData = async () => {
 const productionPerHectare = computed(() => {
   return properties.value.map((property) => {
     const production = property.production[selectedYear.value] ?? 0;
-    const cultivatedArea = property.cultivatedArea || 0;
+    const cultivatedArea = cultivatedAreaByYear.value;
     const name = property.areaName;
     const bags = production / 8.33;
-    const volumesPerHectare = production / (cultivatedArea / 1000);
-    const bagsPerHectare = bags / (cultivatedArea / 1000);
+    const volumesPerHectare = production / (cultivatedArea / 10000);
+    const bagsPerHectare = bags / (cultivatedArea / 10000);
 
     return {
       name,
