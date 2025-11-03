@@ -47,7 +47,6 @@
           <PieChart
             :selectedYear="selectedYear"
             :property="properties"
-            type="properties"
           />
         </div>
         <div class="line-chart" v-if="registeredYears.length > 1">
@@ -92,15 +91,14 @@
         <h2 class="title">
           Distribuição da produção por talhão ({{ selectedYear }})
         </h2>
-        <div class="pie-chart">
-          <PieChart
+        <div class="bar-chart">
+          <BarChart
             v-for="property in properties.filter(
               (p) => p.production && p.production[selectedYear] > 0
             )"
             :key="property.id"
             :selectedYear="selectedYear"
             :property="property"
-            type="fields"
           />
         </div>
       </div>
@@ -117,7 +115,7 @@
 <script setup>
 import "./Statistics.scss";
 import { onMounted, ref, computed } from "vue";
-import { BackButton, LineChart, PieChart } from "@/components";
+import { BackButton, LineChart, PieChart, BarChart } from "@/components";
 import axios from "axios";
 import { useStore } from "@/store";
 

@@ -8,6 +8,7 @@ import EditableMaps from "./EditableMaps/EditableMaps.vue";
 import DataEntry from "./DataEntry/DataEntry.vue";
 import LineChart from "./LineChart/LineChart.vue";
 import PieChart from "./PieChart/PieChart.vue";
+import BarChart from "./BarChart/BarChart.vue";
 
 export {
   Maps,
@@ -20,4 +21,5 @@ export {
   DataEntry,
   LineChart,
   PieChart,
+  BarChart,
 };

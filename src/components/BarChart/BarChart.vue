@@ -1,16 +1,16 @@
 <template>
-  <div class="cmp-pie-chart">
+  <div class="cmp-bar-chart">
     <div class="container">
-      <h2>Produção total ({{ props.selectedYear }})</h2>
-      <Pie :data="chartData" :options="chartOptions" />
+      <h2>{{ property.areaName }}</h2>
+      <Bar :data="chartData" :options="chartOptions" />
     </div>
   </div>
 </template>
 
 <script setup>
-import "./PieChart.scss";
+import "./BarChart.scss";
 import { computed } from "vue";
-import { Pie } from "vue-chartjs";
+import { Bar } from "vue-chartjs";
 import { Chart, registerables } from "chart.js";
 import { GraphColors } from "@/utils/GraphColors";
 
@@ -22,7 +22,7 @@ const props = defineProps({
 });
 
 const chartData = computed(() => {
-  const fields = props.property || 0;
+  const fields = props.property.fields || [];
   const labels = fields.map((f) => f.areaName);
   const data = fields.map((f) => f.production?.[props.selectedYear] ?? 0);
 
@@ -33,9 +33,7 @@ const chartData = computed(() => {
         label: "Produção (volumes)",
         data,
         backgroundColor: GraphColors,
-        borderColor: "#fff",
-        borderWidth: 2,
-        hoverOffset: 12,
+        borderRadius: 6,
       },
     ],
   };
@@ -46,32 +44,59 @@ const chartOptions = computed(() => ({
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: "bottom",
-      onClick: null,
-      labels: {
-        color: "#333",
-        font: { size: 20, weight: 500 },
-        usePointStyle: true,
-        padding: 20,
-      },
+      display: false,
     },
     tooltip: {
       callbacks: {
         label: (context) => {
           const total = context.dataset.data.reduce((a, b) => a + b, 0);
-          const percent = ((context.parsed / total) * 100).toFixed(1);
-          return `${context.parsed} volumes (${percent}%)`;
+          const percent = ((context.parsed.y / total) * 100).toFixed(1);
+          return `${context.parsed.y} volumes (${percent}%)`;
         },
       },
       displayColors: false,
       padding: 12,
       titleFont: {
-        size: 20,
+        size: 18,
         weight: "600",
       },
       bodyFont: {
-        size: 20,
+        size: 18,
         weight: "600",
+      },
+    },
+  },
+  scales: {
+    x: {
+      ticks: {
+        color: "#333",
+        font: {
+          size: 16,
+          weight: 500,
+        },
+      },
+      title: {
+        display: true,
+        text: "Talhões",
+        color: "#333",
+        font: { size: 18, weight: "500" },
+      },
+      grid: { display: true },
+    },
+    y: {
+      beginAtZero: true,
+      ticks: {
+        color: "#333",
+        font: {
+          size: 16,
+          weight: 500,
+        },
+      },
+      title: {
+        display: true,
+        text: "Volumes",
+        color: "#333",
+        font: { size: 18, weight: "500" },
       },
     },
   },
