@@ -31,6 +31,17 @@
               ((totalProduction[selectedYear] ?? 0) / 8.33).toFixed(1)
             }}</span>
           </p>
+          <div class="averages">
+            <h2 class="title">Médias gerais (todos os anos)</h2>
+            <p>
+              Produção total média em volumes:
+              <span>{{ averageProduction }}</span>
+            </p>
+            <p>
+              Produção total média em sacas (estimado):
+              <span>{{ (averageProduction / 8.33).toFixed(1) }}</span>
+            </p>
+          </div>
         </div>
         <div>
           <PieChart
@@ -124,6 +135,13 @@ onMounted(async () => {
   if (registeredYears.value.includes(currentYear)) {
     selectedYear.value = currentYear;
   }
+});
+
+const averageProduction = computed(() => {
+  const values = Object.values(totalProduction.value);
+
+  const total = values.reduce((acc, val) => acc + val, 0);
+  return total / values.length;
 });
 
 const cultivatedAreaByYear = computed(() => {
