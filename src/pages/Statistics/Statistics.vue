@@ -73,7 +73,9 @@
         </h2>
         <div class="pie-chart">
           <PieChart
-            v-for="property in properties"
+            v-for="property in properties.filter(
+              (p) => p.production && p.production[selectedYear] > 0
+            )"
             :key="property.id"
             :selectedYear="selectedYear"
             :property="property"
