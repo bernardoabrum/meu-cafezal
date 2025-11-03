@@ -40,7 +40,9 @@
           />
         </div>
         <div class="line-chart" v-if="registeredYears.length > 1">
-          <h2 class="title">Evolução da produção ao longo dos anos</h2>
+          <h2 class="title">
+            Evolução da produção ao longo dos anos (volumes)
+          </h2>
           <LineChart :chartData="totalProduction" />
         </div>
       </div>
@@ -54,13 +56,21 @@
           <thead>
             <tr>
               <th>Propriedade</th>
+              <th>Sacas (estimado)</th>
               <th>Volumes por hectare</th>
               <th>Sacas por hectare (estimado)</th>
             </tr>
           </thead>
           <tbody>
+            <tr v-if="productionPerHectare.length > 1 && averagePerHectare">
+              <td>{{ averagePerHectare.name }}</td>
+              <td>{{ averagePerHectare.bags.toFixed(1) }}</td>
+              <td>{{ averagePerHectare.volumesPerHectare.toFixed(1) }}</td>
+              <td>{{ averagePerHectare.bagsPerHectare.toFixed(1) }}</td>
+            </tr>
             <tr v-for="property in productionPerHectare" :key="property.name">
               <td>{{ property.name }}</td>
+              <td>{{ property.bags.toFixed(1) }}</td>
               <td>{{ property.volumesPerHectare.toFixed(1) }}</td>
               <td>{{ property.bagsPerHectare.toFixed(1) }}</td>
             </tr>
@@ -182,7 +192,10 @@ const getData = async () => {
 };
 
 const productionPerHectare = computed(() => {
-  return properties.value.map((property) => {
+  const filteredProperties = properties.value.filter(
+    (property) => property.year <= selectedYear.value
+  );
+  return filteredProperties.map((property) => {
     const production = property.production[selectedYear.value] ?? 0;
     const cultivatedArea = cultivatedAreaByYear.value;
     const name = property.areaName;
@@ -197,5 +210,21 @@ const productionPerHectare = computed(() => {
       bagsPerHectare,
     };
   });
+});
+
+const averagePerHectare = computed(() => {
+  const list = productionPerHectare.value;
+  if (!list.length) return null;
+
+  const totalBags = list.reduce((sum, p) => sum + p.bags, 0);
+  const totalVolumes = list.reduce((sum, p) => sum + p.volumesPerHectare, 0);
+  const totalBagsPerHa = list.reduce((sum, p) => sum + p.bagsPerHectare, 0);
+
+  return {
+    name: "Média geral",
+    bags: totalBags / list.length,
+    volumesPerHectare: totalVolumes / list.length,
+    bagsPerHectare: totalBagsPerHa / list.length,
+  };
 });
 </script>
