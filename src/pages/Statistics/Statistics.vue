@@ -35,7 +35,7 @@
             <h2 class="title">Médias gerais (todos os anos)</h2>
             <p>
               Produção total média em volumes:
-              <span>{{ averageProduction }}</span>
+              <span>{{ averageProduction.toFixed(1) }}</span>
             </p>
             <p>
               Produção total média em sacas (estimado):
@@ -55,9 +55,7 @@
       </div>
       <div class="table">
         <h2 class="title">
-          Estatísticas de cada propriedade na proporção por hectare ({{
-            selectedYear
-          }})
+          Produtividade de cada propriedade por hectare ({{ selectedYear }})
         </h2>
         <table v-if="properties.length">
           <thead>
@@ -205,16 +203,27 @@ const getData = async () => {
 };
 
 const productionPerHectare = computed(() => {
+  const selected = Number(selectedYear.value);
   const filteredProperties = properties.value.filter(
-    (property) => property.year <= selectedYear.value
+    (property) => Number(property.year) <= selected
   );
+
   return filteredProperties.map((property) => {
-    const production = property.production[selectedYear.value] ?? 0;
-    const cultivatedArea = cultivatedAreaByYear.value;
+    const production = property.production?.[selected] ?? 0;
+    const productiveFields = property.fields.filter(
+      (field) => (field.production?.[selected] ?? 0) > 0
+    );
+
+    const productiveArea = productiveFields.reduce(
+      (sum, field) => sum + (field.areaSize || 0),
+      0
+    );
+
+    const areaHectares = productiveArea / 10000 || 1;
     const name = property.areaName;
     const bags = production / 8.33;
-    const volumesPerHectare = production / (cultivatedArea / 10000);
-    const bagsPerHectare = bags / (cultivatedArea / 10000);
+    const volumesPerHectare = production / areaHectares;
+    const bagsPerHectare = bags / areaHectares;
 
     return {
       name,
