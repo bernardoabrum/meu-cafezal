@@ -84,6 +84,7 @@ const user = getLoggedUser();
 const selectedArea = getSelectedArea();
 const properties = ref([]);
 const selectedProperty = ref("");
+const currentYear = new Date().getFullYear();
 
 const form = reactive({
   areaName: "",
@@ -133,7 +134,6 @@ const saveStats = async () => {
   const pending = getPendingArea();
   const base = Object.keys(pending).length ? pending : selectedArea;
   const isField = form.areaType === "field";
-  const currentYear = new Date().getFullYear().toString();
 
   const plantsNumber = isField
     ? base.areaSize / fieldForm.roadSpace / fieldForm.plantSpace
@@ -144,7 +144,7 @@ const saveStats = async () => {
     ...fieldForm,
     plantsNumber,
     cultivatedArea: isField ? undefined : base.cultivatedArea || 0,
-    year: currentYear,
+    year: currentYear.toString(),
   };
 
   if (!isField) {
@@ -212,7 +212,7 @@ const deleteArea = async () => {
 
     if (selectedArea.areaType === "field" && ownedPropertyId) {
       await updatePropertyStats(ownedPropertyId);
-      await updatePropertyProduction(ownedPropertyId);
+      await updatePropertyProduction(ownedPropertyId, currentYear);
     }
     setOpenFieldStats(false);
     setPendingArea({});

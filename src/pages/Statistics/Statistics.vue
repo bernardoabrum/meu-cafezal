@@ -44,10 +44,7 @@
           </div>
         </div>
         <div>
-          <PieChart
-            :selectedYear="selectedYear"
-            :property="properties"
-          />
+          <PieChart :selectedYear="selectedYear" :property="properties" />
         </div>
         <div class="line-chart" v-if="registeredYears.length > 1">
           <h2 class="title">
