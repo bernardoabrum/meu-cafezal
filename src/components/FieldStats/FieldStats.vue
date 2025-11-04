@@ -171,7 +171,7 @@ const selectVariety = (variety) => {
 const hideSuggestions = () => {
   setTimeout(() => {
     showSuggestions.value = false;
-  }, 100);
+  }, 200);
 };
 
 watch(selectedProperty, (newVal) => {
@@ -182,6 +182,22 @@ const saveStats = async () => {
   const pending = getPendingArea();
   const base = Object.keys(pending).length ? pending : selectedArea;
   const isField = form.areaType === "field";
+
+  if (!isField && !form.areaName) {
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  if (
+    (isField && !form.areaName) ||
+    !fieldForm.variety ||
+    !fieldForm.ownedProperty ||
+    !fieldForm.roadSpace ||
+    !fieldForm.plantSpace
+  ) {
+    alert("Preencha todos os campos!");
+    return;
+  }
 
   const plantsNumber = isField
     ? base.areaSize / fieldForm.roadSpace / fieldForm.plantSpace
