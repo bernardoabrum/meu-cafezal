@@ -20,6 +20,27 @@
         />
       </div>
       <div class="field-container" v-if="form.areaType === 'field'">
+        <div class="variety">
+          <p>Qual variedade de café cultivada nesse talhão?</p>
+          <input
+            type="text"
+            v-model="fieldForm.variety"
+            placeholder="Digite a variedade de café"
+            autocomplete="off"
+            @input="showSuggestions = true"
+            @blur="hideSuggestions"
+            @focusout="hideSuggestions"
+          />
+          <ul v-if="showSuggestions">
+            <li
+              v-for="item in Array.from(suggestions)"
+              :key="item"
+              @click="selectVariety(item)"
+            >
+              {{ item }}
+            </li>
+          </ul>
+        </div>
         <p>A qual propriedade pertence este talhão?</p>
         <select v-model="selectedProperty">
           <option disabled value="">Selecione uma propriedade</option>
@@ -85,6 +106,8 @@ const selectedArea = getSelectedArea();
 const properties = ref([]);
 const selectedProperty = ref("");
 const currentYear = new Date().getFullYear();
+const suggestions = ref([]);
+const showSuggestions = ref(false);
 
 const form = reactive({
   areaName: "",
@@ -95,6 +118,7 @@ const fieldForm = reactive({
   ownedProperty: null,
   plantSpace: 0,
   roadSpace: 0,
+  variety: "",
 });
 
 onMounted(async () => {
@@ -115,6 +139,7 @@ onMounted(async () => {
           roadSpace: selectedArea.roadSpace,
           plantSpace: selectedArea.plantSpace,
           ownedProperty: selectedArea.ownedProperty,
+          variety: selectedArea.variety || "",
         });
         selectedProperty.value = data.find(
           (p) => p.id === selectedArea.ownedProperty
@@ -124,7 +149,30 @@ onMounted(async () => {
   } catch (err) {
     console.error("Erro ao carregar propriedades:", err);
   }
+  getVarieties();
 });
+
+const getVarieties = async () => {
+  const { data } = await axios.get(
+    `http://localhost:3000/areas?areaType=field&user=${user.id}`
+  );
+  data.forEach((field) => {
+    if (!suggestions.value.includes(field.variety)) {
+      suggestions.value.push(field.variety);
+    }
+  });
+};
+
+const selectVariety = (variety) => {
+  fieldForm.variety = variety;
+  showSuggestions.value = false;
+};
+
+const hideSuggestions = () => {
+  setTimeout(() => {
+    showSuggestions.value = false;
+  }, 100);
+};
 
 watch(selectedProperty, (newVal) => {
   fieldForm.ownedProperty = newVal?.id || null;

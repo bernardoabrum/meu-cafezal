@@ -32,6 +32,28 @@
     }
 
     .field-container {
+      .variety {
+        position: relative;
+
+        ul {
+          position: absolute;
+          list-style: none;
+          background: #fff;
+          border-radius: 8px;
+          width: 100%;
+          border: 1px solid #ddd;
+
+          li {
+            padding: 8px 12px;
+            cursor: pointer;
+
+            &:hover {
+              background: #f0f0f0;
+            }
+          }
+        }
+      }
+
       .measures {
         display: flex;
         gap: 30px;
