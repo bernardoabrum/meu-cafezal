@@ -1,0 +1,50 @@
+html,
+body,
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  color: white;
+}
+
+.page {
+  padding: 40px 60px;
+  background-color: #14171f;
+}
+
+.modal {
+  background-color: #14171f;
+}
+
+input,
+select {
+  background-color: #3d4047;
+  outline: none;
+  padding: 20px 30px;
+  border-radius: 8px;
+  border: 0;
+  border: solid 1px transparent;
+
+  &:focus {
+    border-color: white;
+  }
+
+  &::placeholder {
+    color: #b1b1b1;
+  }
+}
+
+button {
+  background-color: #20293f;
+  padding: 20px 30px;
+  border-radius: 8px;
+  border: 0;
+  border-bottom: solid 2px transparent;
+  cursor: pointer;
+
+  &:hover {
+    border-color: white;
+  }
+}

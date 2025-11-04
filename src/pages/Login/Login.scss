@@ -1,18 +1,105 @@
 .login-page {
   display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
+  width: 100vw;
+
+  .image-container {
+    width: 50%;
+    border-radius: 15px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.7)),
+      url("@/assets/coffee1.jpg");
+    background-size: cover;
+    background-position: top;
+    opacity: 0.7;
+
+    @media (max-width: 1024px) {
+      display: none;
+    }
+  }
 
   .container {
     display: flex;
-    flex-direction: column;
-    width: 400px;
-    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+
+    @media (max-width: 1024px) {
+      width: 100%;
+    }
+
+    .password-input {
+      display: flex;
+      background-color: #3d4047;
+      border-radius: 8px;
+      border: solid 1px transparent;
+
+      &:focus-within {
+        border-color: white;
+      }
+
+      input {
+        background-color: transparent;
+        border-color: transparent;
+        width: 100%;
+        padding: 20px 0 20px 20px;
+      }
+
+      button {
+        background-color: transparent;
+        padding: 0;
+        margin: 20px 20px 20px 10px;
+        border-color: transparent;
+      }
+    }
+
+    .register {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      width: 500px;
+      margin: 0 50px;
+
+      @media (max-width: 1024px) {
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 58px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 20px;
+      }
+
+      a {
+        font-size: 20px;
+        color: #a8b9e2;
+      }
+    }
 
     .login {
-      .buttons {
-        display: flex;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      width: 500px;
+      margin: 0 50px;
+
+      @media (max-width: 1024px) {
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 58px;
+      }
+
+      p {
+        font-size: 20px;
+      }
+
+      a {
+        font-size: 20px;
+        color: #a8b9e2;
       }
     }
   }

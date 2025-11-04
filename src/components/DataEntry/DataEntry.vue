@@ -1,6 +1,6 @@
 <template>
   <div class="cmp-data-entry">
-    <div class="container">
+    <div class="modal">
       <div class="infos" v-if="selectedArea.areaType == 'field'">
         <div class="name">
           <p>Talhão</p>
