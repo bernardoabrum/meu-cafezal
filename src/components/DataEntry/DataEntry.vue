@@ -5,6 +5,7 @@
         <div class="name">
           <p>Talhão</p>
           <h2>{{ selectedArea.areaName }}</h2>
+          <p class="variety">{{ selectedArea.variety }}</p>
         </div>
         <div>
           <p>Espaçamento rua: {{ selectedArea.roadSpace }}</p>

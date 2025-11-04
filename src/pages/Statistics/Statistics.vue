@@ -46,10 +46,7 @@
         <div>
           <PieChart :selectedYear="selectedYear" :property="properties" />
         </div>
-        <div class="line-chart" v-if="registeredYears.length > 1">
-          <h2 class="title">
-            Evolução da produção ao longo dos anos (volumes)
-          </h2>
+        <div v-if="registeredYears.length > 1">
           <LineChart :chartData="totalProduction" />
         </div>
       </div>

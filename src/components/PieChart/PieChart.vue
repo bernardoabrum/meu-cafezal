@@ -1,9 +1,7 @@
 <template>
   <div class="cmp-pie-chart">
-    <div class="container">
-      <h2>Produção total ({{ props.selectedYear }})</h2>
-      <Pie :data="chartData" :options="chartOptions" />
-    </div>
+    <h2 class="title">Produção total por propriedade ({{ props.selectedYear }})</h2>
+    <Pie :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
@@ -49,7 +47,6 @@ const chartOptions = computed(() => ({
       position: "bottom",
       onClick: null,
       labels: {
-        color: "#333",
         font: { size: 20, weight: 500 },
         usePointStyle: true,
         padding: 20,

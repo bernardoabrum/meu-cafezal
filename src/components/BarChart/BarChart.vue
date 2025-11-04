@@ -1,9 +1,7 @@
 <template>
   <div class="cmp-bar-chart">
-    <div class="container">
-      <h2>{{ property.areaName }}</h2>
-      <Bar :data="chartData" :options="chartOptions" />
-    </div>
+    <h2 class="title">{{ property.areaName }}</h2>
+    <Bar :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
@@ -69,7 +67,6 @@ const chartOptions = computed(() => ({
   scales: {
     x: {
       ticks: {
-        color: "#333",
         font: {
           size: 16,
           weight: 500,
@@ -78,7 +75,6 @@ const chartOptions = computed(() => ({
       title: {
         display: true,
         text: "Talhões",
-        color: "#333",
         font: { size: 18, weight: "500" },
       },
       grid: { display: true },
@@ -86,7 +82,6 @@ const chartOptions = computed(() => ({
     y: {
       beginAtZero: true,
       ticks: {
-        color: "#333",
         font: {
           size: 16,
           weight: 500,
@@ -95,7 +90,6 @@ const chartOptions = computed(() => ({
       title: {
         display: true,
         text: "Volumes",
-        color: "#333",
         font: { size: 18, weight: "500" },
       },
     },

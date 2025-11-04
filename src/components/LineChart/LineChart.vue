@@ -1,5 +1,6 @@
 <template>
   <div class="cmp-line-chart">
+    <h2 class="title">Evolução da produção ao longo dos anos</h2>
     <Line :data="chartData" :options="chartOptions" />
   </div>
 </template>
