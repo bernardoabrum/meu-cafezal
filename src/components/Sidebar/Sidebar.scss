@@ -6,16 +6,35 @@
   z-index: 1;
 
   &.hidden {
-    transform: translateX(-300px);
+    transform: translateX(-310px);
   }
 
   .container {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    width: 300px;
-    padding: 120px 10px 30px;
+    width: 310px;
+    padding: 120px 10px 30px 20px;
     background-color: #14171f;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #0f121a;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+      cursor: pointer;
+    }
 
     h2 {
       text-align: center;
