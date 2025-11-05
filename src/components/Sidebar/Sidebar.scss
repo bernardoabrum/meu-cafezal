@@ -6,10 +6,23 @@
   left: 0;
   width: 300px;
   height: 100vh;
-  background-color: beige;
-  padding-top: 100px;
+  background-color: #14171f;
+  padding-top: 185px;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
   .buttons {
+    button {
+      border-radius: 0;
+
+      &:hover {
+        background-color: #161c2b;
+      }
+    }
+
     .property-button {
       display: flex;
 

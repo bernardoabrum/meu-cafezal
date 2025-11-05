@@ -5,7 +5,7 @@
       :api-key="VITE_GOOGLE_MAPS_API_KEY"
       :center="center"
       :zoom="15"
-      style="width: 1000px; height: 500px"
+      style="width: 100%; height: 100%"
       map-type-id="hybrid"
       :libraries="['drawing', 'geometry']"
     />

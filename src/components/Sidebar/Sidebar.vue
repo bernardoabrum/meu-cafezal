@@ -1,6 +1,6 @@
 <template>
   <div class="cmp-sidebar">
-    <h2>Sidebar</h2>
+    <h2>Propriedades</h2>
     <div class="buttons" v-for="property in properties" :key="property.id">
       <div class="property-button">
         <button @click="toggleExpand(property.id)">
