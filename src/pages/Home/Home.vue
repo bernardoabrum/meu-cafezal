@@ -1,5 +1,6 @@
 <template>
   <div class="page home-page">
+    <div class="image" />
     <div class="buttons">
       <button @click="redirectUser('demarcate')">Marcar nova área</button>
       <button @click="redirectUser('visualize')">
