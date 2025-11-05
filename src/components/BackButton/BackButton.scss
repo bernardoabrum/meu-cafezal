@@ -1,6 +1,23 @@
 .cmp-back-button {
   position: absolute;
-  top: 150px;
-  left: 350px;
+  background-color: white;
+  border-radius: 8px;
+  top: 120px;
+  left: 10%;
   cursor: pointer;
+  z-index: 1;
+  padding: 8px 10px;
+  border-bottom: 2px solid white;
+
+  path {
+    color: #20293f;
+  }
+
+  a {
+    color: #20293f;
+  }
+
+  &:hover {
+    border-color: #20293f;
+  }
 }

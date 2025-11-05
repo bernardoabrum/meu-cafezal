@@ -1,14 +1,15 @@
 <template>
   <div class="cmp-field-stats">
     <div class="modal">
-      <h2>FieldStats</h2>
+      <h2>Informações da área</h2>
       <div class="general-container">
+        <p>Selecione o tipo de área:</p>
         <div class="checkbox" v-if="!Object.keys(selectedArea).length">
-          <div>
+          <div class="inputs">
             <input type="radio" value="property" v-model="form.areaType" />
             <span>Propriedade</span>
           </div>
-          <div>
+          <div class="inputs">
             <input type="radio" value="field" v-model="form.areaType" />
             <span>Talhão</span>
           </div>
@@ -20,12 +21,12 @@
         />
       </div>
       <div class="field-container" v-if="form.areaType === 'field'">
+        <p>Qual variedade de café cultivada nesse talhão?</p>
         <div class="variety">
-          <p>Qual variedade de café cultivada nesse talhão?</p>
           <input
             type="text"
             v-model="fieldForm.variety"
-            placeholder="Digite a variedade de café"
+            placeholder="Digite ou selecione a variedade"
             autocomplete="off"
             @input="showSuggestions = true"
             @blur="hideSuggestions"
@@ -42,31 +43,44 @@
           </ul>
         </div>
         <p>A qual propriedade pertence este talhão?</p>
-        <select v-model="selectedProperty">
-          <option disabled value="">Selecione uma propriedade</option>
-          <option
-            :key="property.id"
-            v-for="property in properties"
-            :value="property"
-          >
-            {{ property.areaName }}
-          </option>
-        </select>
+        <div class="select-property">
+          <input
+            type="text"
+            v-model="selectedProperty.areaName"
+            placeholder="Selecione uma propriedade"
+            autocomplete="off"
+            readonly
+            @focusin="showProperties = true"
+            @blur="hideProperties"
+            @focusout="hideProperties"
+          />
+          <ul v-if="showProperties">
+            <li
+              v-for="property in properties"
+              :key="property.id"
+              @click="selectProperty(property)"
+            >
+              {{ property.areaName }}
+            </li>
+          </ul>
+        </div>
         <p>Qual espaçamento utilizado no talhão?</p>
         <div class="measures">
-          <div>
+          <div class="input">
             <p>Rua:</p>
             <input
               type="number"
               v-model="fieldForm.roadSpace"
+              placeholder="0"
               min="0"
               step="0.1"
             />
           </div>
-          <div>
+          <div class="input">
             <p>Pé a pé:</p>
             <input
               type="number"
+              placeholder="0"
               v-model="fieldForm.plantSpace"
               min="0"
               step="0.1"
@@ -108,6 +122,7 @@ const selectedProperty = ref("");
 const currentYear = new Date().getFullYear();
 const suggestions = ref([]);
 const showSuggestions = ref(false);
+const showProperties = ref(false);
 
 const form = reactive({
   areaName: "",
@@ -168,9 +183,20 @@ const selectVariety = (variety) => {
   showSuggestions.value = false;
 };
 
+const selectProperty = (property) => {
+  selectedProperty.value = property;
+  showProperties.value = false;
+};
+
 const hideSuggestions = () => {
   setTimeout(() => {
     showSuggestions.value = false;
+  }, 200);
+};
+
+const hideProperties = () => {
+  setTimeout(() => {
+    showProperties.value = false;
   }, 200);
 };
 

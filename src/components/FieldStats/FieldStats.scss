@@ -7,66 +7,97 @@
   width: 100vw;
   height: 100vh;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 2;
 
   .modal {
     display: flex;
     flex-direction: column;
     width: 600px;
-    padding: 20px;
+    padding: 30px;
     height: 400px;
     overflow-y: scroll;
     overflow-x: hidden;
     gap: 30px;
+    border-radius: 15px;
+
+    h2 {
+      font-size: 32px;
+    }
+
+    @media (max-width: 768px) {
+      width: 90%;
+    }
 
     .general-container {
       display: flex;
       flex-direction: column;
+      gap: 15px;
 
       .checkbox {
         display: flex;
         gap: 30px;
+
+        .inputs {
+          display: flex;
+          gap: 8px;
+
+          input {
+            transform: scale(1.4);
+          }
+        }
       }
     }
 
     .field-container {
-      .variety {
-        position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
 
-        ul {
-          position: absolute;
-          list-style: none;
-          background: #fff;
-          border-radius: 8px;
-          width: 100%;
-          border: 1px solid #ddd;
+      ul {
+        position: absolute;
+        list-style: none;
+        border-radius: 8px;
+        width: 100%;
+        z-index: 2;
 
-          li {
-            padding: 8px 12px;
-            cursor: pointer;
+        li {
+          padding: 8px 12px;
+          cursor: pointer;
+          background-color: #3d4047;
 
-            &:hover {
-              background: #f0f0f0;
-            }
+          &:hover {
+            background-color: #2a2c31;
           }
         }
       }
 
+      .variety {
+        position: relative;
+      }
+
+      .select-property {
+        position: relative;
+      }
+
       .measures {
         display: flex;
-        gap: 30px;
+        gap: 40px;
 
-        input {
-          width: 80px;
-          border: solid 1px #ccc;
-          outline: none;
-          padding: 5px 15px;
-        }
-
-        div {
+        .input {
           display: flex;
           gap: 10px;
+
+          @media (max-width: 768px) {
+            flex-direction: column;
+          }
+
+          input {
+            width: 80px;
+            border: solid 1px #ccc;
+            outline: none;
+            padding: 5px 15px;
+          }
         }
       }
     }
@@ -74,6 +105,10 @@
     .buttons {
       display: flex;
       gap: 20px;
+
+      button {
+        padding: 12px;
+      }
     }
   }
 }

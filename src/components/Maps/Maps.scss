@@ -4,6 +4,19 @@
   justify-content: center;
   align-items: center;
   gap: 30px;
+  width: 100vw;
+
+  .button {
+    position: absolute;
+    top: 180px;
+    z-index: 1;
+
+    @media (max-width: 1024px) {
+      button {
+        padding: 8px 10px;
+      }
+    }
+  }
 
   .modal {
     position: absolute;
