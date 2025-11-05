@@ -3,9 +3,11 @@
   justify-content: space-between;
   padding: 20px;
   height: 100px;
-  position: relative;
-  background-color: red;
+  position: fixed;
+  width: 100vw;
+  background: linear-gradient(90deg, #14171f 0%, #090c14 100%);
   z-index: 1;
+  box-shadow: 0px 0px 30px -10px black;
 
   .account {
     display: flex;
