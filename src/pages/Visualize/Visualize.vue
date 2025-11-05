@@ -1,8 +1,8 @@
 <template>
-  <div class="page visualize-page">
+  <div :class="['page visualize-page', { moveButton: toggleSidebar }]">
     <BackButton />
     <EditableMaps :focusedArea="focusedArea" />
-    <Sidebar @focusArea="putFocus" />
+    <Sidebar @focusArea="putFocus" @toggleSidebar="openSidebar" />
     <DataEntry v-if="getOpenDataEntry()" />
     <FieldStats v-if="getOpenFieldStats()" />
   </div>
@@ -23,8 +23,13 @@ import { useStore } from "@/store";
 const { getOpenDataEntry, getOpenFieldStats } = useStore();
 
 const focusedArea = ref(null);
+const toggleSidebar = ref(false);
 
 const putFocus = (area) => {
   focusedArea.value = area;
+};
+
+const openSidebar = (value) => {
+  toggleSidebar.value = value;
 };
 </script>

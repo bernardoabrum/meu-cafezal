@@ -1,39 +1,64 @@
 .cmp-sidebar {
   display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 300px;
+  position: fixed;
+  transition: all 0.3s ease;
   height: 100vh;
-  background-color: #14171f;
-  padding-top: 185px;
+  z-index: 1;
 
-  h2 {
-    text-align: center;
-    margin-bottom: 10px;
+  &.hidden {
+    transform: translateX(-300px);
   }
 
-  .buttons {
-    button {
-      border-radius: 0;
-
-      &:hover {
-        background-color: #161c2b;
-      }
-    }
-
-    .property-button {
-      display: flex;
-
-      .name {
-        width: 100%;
-      }
-    }
-  }
-
-  .fields-container {
+  .container {
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    width: 300px;
+    padding: 120px 10px 30px;
+    background-color: #14171f;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 20px;
+
+      button {
+        border-radius: 0;
+
+        &:hover {
+          background-color: #161c2b;
+        }
+      }
+
+      .property-button {
+        display: flex;
+
+        .name {
+          width: 100%;
+        }
+      }
+    }
+
+    .fields-button {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+
+  .close {
+    margin-top: 100px;
+
+    button {
+      border-radius: 0 0 12px 0;
+      padding: 8px;
+      background-color: #14171f;
+    }
   }
 }
