@@ -41,30 +41,40 @@ const chartOptions = ref({
     x: {
       title: {
         display: true,
+        color: "#fff",
         text: "Ano",
         font: {
           size: 18,
         },
       },
       ticks: {
+        color: "#fff",
         font: {
           size: 14,
         },
+      },
+      grid: {
+        color: "rgba(255,255,255,0.3)",
       },
     },
     y: {
       beginAtZero: true,
       title: {
         display: true,
+        color: "#fff",
         text: "Volumes",
         font: {
           size: 18,
         },
       },
       ticks: {
+        color: "#fff",
         font: {
           size: 14,
         },
+      },
+      grid: {
+        color: "rgba(255,255,255,0.3)",
       },
     },
   },

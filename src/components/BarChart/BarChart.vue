@@ -67,27 +67,34 @@ const chartOptions = computed(() => ({
   scales: {
     x: {
       ticks: {
+        color: "#fff",
         font: {
           size: 16,
           weight: 500,
         },
       },
       title: {
+        color: "#fff",
         display: true,
         text: "Talhões",
         font: { size: 18, weight: "500" },
       },
-      grid: { display: true },
+      grid: { display: true, color: "rgba(255,255,255,0.3)" },
     },
     y: {
       beginAtZero: true,
       ticks: {
+        color: "#fff",
         font: {
           size: 16,
           weight: 500,
         },
       },
+      grid: {
+        color: "rgba(255,255,255,0.3)",
+      },
       title: {
+        color: "#fff",
         display: true,
         text: "Volumes",
         font: { size: 18, weight: "500" },
