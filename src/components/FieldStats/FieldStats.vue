@@ -209,20 +209,22 @@ const saveStats = async () => {
   const base = Object.keys(pending).length ? pending : selectedArea;
   const isField = form.areaType === "field";
 
-  if (!isField && !form.areaName) {
+  if (form.areaType == "property" && !form.areaName) {
     alert("Preencha todos os campos!");
     return;
   }
 
-  if (
-    (isField && !form.areaName) ||
-    !fieldForm.variety ||
-    !fieldForm.ownedProperty ||
-    !fieldForm.roadSpace ||
-    !fieldForm.plantSpace
-  ) {
-    alert("Preencha todos os campos!");
-    return;
+  if (form.areaType == "field") {
+    if (
+      !form.areaName ||
+      !fieldForm.variety ||
+      !fieldForm.ownedProperty ||
+      !fieldForm.roadSpace ||
+      !fieldForm.plantSpace
+    ) {
+      alert("Preencha todos os campos!");
+      return;
+    }
   }
 
   const plantsNumber = isField

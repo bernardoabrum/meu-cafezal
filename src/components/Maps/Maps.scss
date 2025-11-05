@@ -1,8 +1,6 @@
 .cmp-maps {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
   width: 100vw;
 
   .button {
@@ -15,9 +13,5 @@
         padding: 8px 10px;
       }
     }
-  }
-
-  .modal {
-    position: absolute;
   }
 }
