@@ -3,12 +3,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 30px;
   width: 100vw;
 
   .button {
     position: absolute;
-    top: 180px;
+    top: 185px;
     z-index: 1;
 
     @media (max-width: 1024px) {
