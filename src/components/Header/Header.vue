@@ -1,6 +1,9 @@
 <template>
   <div class="cmp-header">
-    <h1>Header</h1>
+    <div class="logo" @click="goHome">
+      <img src="@/assets/coffee.png" alt="##" />
+      <p>MEU CAFEZAL</p>
+    </div>
     <div class="account">
       <p>{{ name }}</p>
       <button @click="logout">Sair</button>
@@ -24,5 +27,9 @@ onMounted(() => {
 const logout = () => {
   router.push("/login");
   setLoggedUser(null);
+};
+
+const goHome = () => {
+  router.push("/home");
 };
 </script>
