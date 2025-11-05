@@ -55,26 +55,26 @@
           <button @click="sendValue">Enviar</button>
         </div>
         <div class="revise">
-          <p>
-            Total lançado ({{ currentYear }}):
-            <span v-if="showVolumes">
+          <p>Total lançado ({{ currentYear }}):</p>
+          <p v-if="showVolumes">
+            <span>
               {{ selectedArea.production?.[currentYear] || 0 }}
             </span>
-            <span v-else>
-              <input
-                v-model="revisedValue"
-                type="number"
-                min="0"
-                placeholder="0"
-                @wheel.prevent
-                @input="
-                  (e) => {
-                    if (e.target.value < 0)
-                      e.target.value = currentProduction = 0;
-                  }
-                "
-              />
-            </span>
+          </p>
+          <p v-else>
+            <input
+              v-model="revisedValue"
+              type="number"
+              min="0"
+              placeholder="0"
+              @wheel.prevent
+              @input="
+                (e) => {
+                  if (e.target.value < 0)
+                    e.target.value = currentProduction = 0;
+                }
+              "
+            />
           </p>
           <button>
             <FontAwesomeIcon
