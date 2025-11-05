@@ -27,11 +27,43 @@
 
   .select {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
-    select {
-      width: fit-content;
-      padding: 10px;
+    @media (max-width: 768px) {
+      align-items: end;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .input {
+      position: relative;
+      width: 100px;
+
+      input {
+        padding: 10px;
+      }
+
+      ul {
+        position: absolute;
+        list-style: none;
+        border-radius: 8px;
+        width: 100%;
+        z-index: 2;
+
+        li {
+          padding: 8px 12px;
+          cursor: pointer;
+          background-color: #3d4047;
+
+          &:hover {
+            background-color: #2a2c31;
+          }
+        }
+      }
     }
   }
 

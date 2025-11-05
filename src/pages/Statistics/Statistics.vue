@@ -3,12 +3,27 @@
     <BackButton />
     <div v-if="registeredYears.length">
       <div class="select">
-        <select v-model="selectedYear" name="selectedYear">
-          <option disabled value="">Selecione um ano</option>
-          <option v-for="year in registeredYears" :key="year" :value="year">
-            {{ year }}
-          </option>
-        </select>
+        <p>Selecione um ano:</p>
+        <div class="input">
+          <input
+            type="number"
+            v-model="selectedYear"
+            placeholder="Selecione um ano"
+            readonly
+            @focusin="showYears = true"
+            @blur="hideYears"
+            @focusout="hideYears"
+          />
+          <ul v-if="showYears">
+            <li
+              v-for="year in registeredYears"
+              :key="year"
+              @click="selectYear(year)"
+            >
+              {{ year }}
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="infos">
         <div class="totals">
@@ -115,6 +130,7 @@ const selectedYear = ref("");
 const totalProduction = ref({});
 const registeredYears = ref([]);
 const properties = ref([]);
+const showYears = ref(false);
 const { getLoggedUser } = useStore();
 
 onMounted(async () => {
@@ -246,4 +262,15 @@ const averagePerHectare = computed(() => {
     bagsPerHectare: totalBagsPerHa / list.length,
   };
 });
+
+const hideYears = () => {
+  setTimeout(() => {
+    showYears.value = false;
+  }, 200);
+};
+
+const selectYear = (year) => {
+  selectedYear.value = year;
+  showYears.value = false;
+};
 </script>
