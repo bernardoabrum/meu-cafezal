@@ -7,7 +7,7 @@
           <h2>{{ selectedArea.areaName }}</h2>
           <p class="variety">{{ selectedArea.variety }}</p>
         </div>
-        <div>
+        <div class="numbers">
           <p>Espaçamento rua: {{ selectedArea.roadSpace }}</p>
           <p>Espaçamento pé a pé: {{ selectedArea.plantSpace }}</p>
           <p>Tamanho da área: {{ selectedArea.areaSize.toFixed(0) }}m²</p>
@@ -22,7 +22,7 @@
           <p>Propriedade</p>
           <h2>{{ selectedArea.areaName }}</h2>
         </div>
-        <div>
+        <div class="numbers">
           <p>Área total: {{ selectedArea.areaSize.toFixed(0) }}m²</p>
           <p>
             Área cultivada total: {{ selectedArea.cultivatedArea.toFixed(0) }}m²
