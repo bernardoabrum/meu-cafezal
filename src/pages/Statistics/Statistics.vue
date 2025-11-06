@@ -123,7 +123,7 @@
 import "./Statistics.scss";
 import { onMounted, ref, computed } from "vue";
 import { BackButton, LineChart, PieChart, BarChart } from "@/components";
-import axios from "axios";
+import api from "@/api";
 import { useStore } from "@/store";
 
 const selectedYear = ref("");
@@ -180,12 +180,12 @@ const totalPlantsByYear = computed(() => {
 
 const getData = async () => {
   try {
-    const { data: propertiesData } = await axios.get(
-      `http://localhost:3000/areas?areaType=property&user=${getLoggedUser().id}`
+    const { data: propertiesData } = await api.get(
+      `/areas?areaType=property&user=${getLoggedUser().id}`
     );
 
-    const { data: fieldsData } = await axios.get(
-      `http://localhost:3000/areas?areaType=field&user=${getLoggedUser().id}`
+    const { data: fieldsData } = await api.get(
+      `/areas?areaType=field&user=${getLoggedUser().id}`
     );
 
     const combinedData = propertiesData.map((property) => {

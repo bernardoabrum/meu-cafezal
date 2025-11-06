@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import axios from "axios";
+import api from "@/api";
 
 const store = createStore({
   state: {
@@ -45,16 +45,16 @@ const store = createStore({
     },
     async updatePropertyProduction(context, { propertyId, currentYear }) {
       try {
-        const { data: allFields } = await axios.get(
-          `http://localhost:3000/areas?areaType=field&ownedProperty=${propertyId}`
+        const { data: allFields } = await api.get(
+          `/areas?areaType=field&ownedProperty=${propertyId}`
         );
 
         const totalProduction = allFields.reduce((acc, field) => {
           return acc + (field.production?.[currentYear] || 0);
         }, 0);
 
-        const { data: property } = await axios.get(
-          `http://localhost:3000/areas/${propertyId}`
+        const { data: property } = await api.get(
+          `/areas/${propertyId}`
         );
 
         const updatedProductions = {
@@ -62,7 +62,7 @@ const store = createStore({
           [currentYear]: totalProduction,
         };
 
-        await axios.patch(`http://localhost:3000/areas/${property.id}`, {
+        await api.patch(`/areas/${property.id}`, {
           production: updatedProductions,
         });
       } catch (err) {

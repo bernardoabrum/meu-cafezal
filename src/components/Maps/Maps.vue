@@ -20,7 +20,7 @@
 
 <script setup>
 import "./Maps.scss";
-import axios from "axios";
+import api from "@/api";
 import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
@@ -99,8 +99,8 @@ const configMaps = () => {
 
 const loadAreas = async () => {
   try {
-    const { data } = await axios.get(
-      `http://localhost:3000/areas?user=${user.id}`
+    const { data } = await api.get(
+      `/areas?user=${user.id}`
     );
     data.forEach((area) => {
       const polygon = new google.maps.Polygon({

@@ -96,9 +96,9 @@
 import { ref } from "vue";
 import "./DataEntry.scss";
 import { useStore } from "@/store";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faPenToSquare, faCheck } from "@fortawesome/free-solid-svg-icons";
+import api from "@/api";
 
 const {
   setOpenDataEntry,
@@ -122,7 +122,7 @@ const sendValue = async () => {
     const updatedVolumes = { ...existingVolumes };
     updatedVolumes[currentYear] = (updatedVolumes[currentYear] || 0) + newValue;
 
-    await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
+    await api.patch(`/areas/${selectedArea.id}`, {
       production: updatedVolumes,
     });
 
@@ -150,7 +150,7 @@ const reviseVolumes = async () => {
         [currentYear]: updatedValue,
       };
 
-      await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
+      await api.patch(`/areas/${selectedArea.id}`, {
         production: updatedVolumes,
       });
 

@@ -103,7 +103,7 @@
 import "./FieldStats.scss";
 import { onMounted, reactive, ref, watch } from "vue";
 import { useStore } from "@/store";
-import axios from "axios";
+import api from "@/api";
 
 const {
   setOpenFieldStats,
@@ -138,8 +138,8 @@ const fieldForm = reactive({
 
 onMounted(async () => {
   try {
-    const { data } = await axios.get(
-      `http://localhost:3000/areas?areaType=property&user=${user.id}`
+    const { data } = await api.get(
+      `/areas?areaType=property&user=${user.id}`
     );
     properties.value = data;
 
@@ -168,8 +168,8 @@ onMounted(async () => {
 });
 
 const getVarieties = async () => {
-  const { data } = await axios.get(
-    `http://localhost:3000/areas?areaType=field&user=${user.id}`
+  const { data } = await api.get(
+    `/areas?areaType=field&user=${user.id}`
   );
   data.forEach((field) => {
     if (!suggestions.value.includes(field.variety)) {
@@ -247,12 +247,12 @@ const saveStats = async () => {
 
   try {
     if (!Object.keys(selectedArea).length) {
-      await axios.post("http://localhost:3000/areas", {
+      await api.post("/areas", {
         ...payload,
         ...pending,
       });
     } else {
-      await axios.patch(`http://localhost:3000/areas/${selectedArea.id}`, {
+      await api.patch(`/areas/${selectedArea.id}`, {
         ...payload,
       });
     }
@@ -270,8 +270,8 @@ const saveStats = async () => {
 
 const updatePropertyStats = async (propertyId) => {
   try {
-    const { data: fields } = await axios.get(
-      `http://localhost:3000/areas?ownedProperty=${propertyId}&areaType=field`
+    const { data: fields } = await api.get(
+      `/areas?ownedProperty=${propertyId}&areaType=field`
     );
 
     const totals = fields.reduce(
@@ -282,7 +282,7 @@ const updatePropertyStats = async (propertyId) => {
       { plants: 0, area: 0 }
     );
 
-    await axios.patch(`http://localhost:3000/areas/${propertyId}`, {
+    await api.patch(`/areas/${propertyId}`, {
       plantsNumber: totals.plants,
       cultivatedArea: totals.area,
     });
@@ -300,7 +300,7 @@ const deleteArea = async () => {
   try {
     const ownedPropertyId = selectedArea?.ownedProperty;
 
-    await axios.delete(`http://localhost:3000/areas/${selectedArea.id}`);
+    await api.delete(`/areas/${selectedArea.id}`);
 
     if (selectedArea.areaType === "field" && ownedPropertyId) {
       await updatePropertyStats(ownedPropertyId);

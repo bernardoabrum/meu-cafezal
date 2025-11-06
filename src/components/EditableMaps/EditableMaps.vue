@@ -14,10 +14,10 @@
 
 <script setup>
 import "./EditableMaps.scss";
-import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
+import api from "@/api";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
@@ -99,8 +99,8 @@ const configMaps = () => {
 
 const loadAreas = async () => {
   try {
-    const { data } = await axios.get(
-      `http://localhost:3000/areas?user=${user.id}`
+    const { data } = await api.get(
+      `/areas?user=${user.id}`
     );
     data.forEach((area) => {
       const polygon = new google.maps.Polygon({
@@ -116,8 +116,8 @@ const loadAreas = async () => {
 
       google.maps.event.addListener(polygon, "click", async () => {
         try {
-          const { data: freshArea } = await axios.get(
-            `http://localhost:3000/areas/${area.id}`
+          const { data: freshArea } = await api.get(
+            `/areas/${area.id}`
           );
           setSelectedArea(freshArea);
           setOpenDataEntry(true);

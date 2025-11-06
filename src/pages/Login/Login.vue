@@ -63,7 +63,7 @@
 <script setup>
 import "./Login.scss";
 import { ref } from "vue";
-import axios from "axios";
+import api from "@/api";
 import { useStore } from "@/store";
 import { useRouter } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -88,7 +88,7 @@ const loginButton = async () => {
   }
 
   try {
-    const { data } = await axios.get("http://localhost:3000/users", {
+    const { data } = await api.get("/users", {
       params: {
         email: email.value,
         password: password.value,
@@ -137,8 +137,8 @@ const createAccount = async () => {
   }
 
   try {
-    const { data: existingUsers } = await axios.get(
-      "http://localhost:3000/users",
+    const { data: existingUsers } = await api.get(
+      "/users",
       {
         params: { email: email.value },
       }
@@ -149,7 +149,7 @@ const createAccount = async () => {
       return;
     }
 
-    await axios.post("http://localhost:3000/users", {
+    await api.post("/users", {
       name: name.value,
       email: email.value,
       password: password.value,

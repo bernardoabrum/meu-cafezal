@@ -45,7 +45,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/api";
 import "./Sidebar.scss";
 import { useStore } from "@/store";
 
@@ -58,13 +58,13 @@ const { getLoggedUser } = useStore();
 
 onMounted(async () => {
   const user = getLoggedUser();
-  const resProps = await axios.get(
-    `http://localhost:3000/areas?areaType=property&user=${user.id}`
+  const resProps = await api.get(
+    `/areas?areaType=property&user=${user.id}`
   );
   properties.value = resProps.data;
 
-  const resFields = await axios.get(
-    `http://localhost:3000/areas?areaType=field&user=${user.id}`
+  const resFields = await api.get(
+    `/areas?areaType=field&user=${user.id}`
   );
   fields.value = resFields.data;
 });
