@@ -12,19 +12,33 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "CoffeeLedger",
-        short_name: "CoffeeLedger",
+        name: "Meu Cafezal",
+        short_name: "Meu Cafezal",
         theme_color: "#42b883",
         icons: [
           {
-            src: "pwa-192x192.png",
+            src: "/icons/pwa-192x192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "pwa-512x512.png",
+            src: "/icons/pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
+          },
+        ],
+        screenshots: [
+          {
+            src: "/screenshots/screenshot1.png",
+            sizes: "952x532",
+            type: "image/png",
+            form_factor: "wide",
+          },
+          {
+            src: "/screenshots/screenshot2.png",
+            sizes: "695x821",
+            type: "image/png",
+            form_factor: "narrow",
           },
         ],
       },
