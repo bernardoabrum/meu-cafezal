@@ -54,14 +54,21 @@
 
       .checkbox {
         display: flex;
-        gap: 30px;
+        gap: 20px;
 
         .inputs {
           display: flex;
-          gap: 8px;
+          cursor: pointer;
+          background-color: #0d0f14;
+          padding: 10px;
+          border-radius: 8px;
 
-          input {
-            transform: scale(1.4);
+          &:hover {
+            background-color: #2a2c31;
+          } 
+
+          &.active {
+            background-color: #2a2c31;
           }
         }
       }

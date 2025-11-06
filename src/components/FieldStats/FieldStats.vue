@@ -5,12 +5,10 @@
       <div class="general-container">
         <p>Selecione o tipo de área:</p>
         <div class="checkbox" v-if="!Object.keys(selectedArea).length">
-          <div class="inputs">
-            <input type="radio" value="property" v-model="form.areaType" />
+          <div :class="['inputs', {active: form.areaType == 'property'}]" @click="form.areaType = 'property'">
             <span>Propriedade</span>
           </div>
-          <div class="inputs">
-            <input type="radio" value="field" v-model="form.areaType" />
+          <div :class="['inputs', {active: form.areaType == 'field'}]" @click="form.areaType = 'field'">
             <span>Talhão</span>
           </div>
         </div>
