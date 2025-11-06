@@ -13,6 +13,10 @@ body,
   padding: 40px 60px;
   background: linear-gradient(130deg, #14171f 0%, #090c14 100%);
   min-height: 100vh;
+
+  @media (max-width: 768px) {
+    padding: 40px 20px;
+  }
 }
 
 .modal {
