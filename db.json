@@ -123,8 +123,8 @@
       "areaName": "Cau",
       "areaType": "property",
       "variety": "",
-      "plantsNumber": 3621.4316237883977,
-      "cultivatedArea": 10864.294871365195,
+      "plantsNumber": 4065.572519054748,
+      "cultivatedArea": 12196.717557164246,
       "year": "2025",
       "user": "1824",
       "areaSize": 65795.3733246768,
@@ -348,6 +348,33 @@
         {
           "lat": -20.596794313091678,
           "lng": -42.131691915635855
+        }
+      ]
+    },
+    {
+      "id": "141e",
+      "areaName": "Talhão teste",
+      "areaType": "field",
+      "ownedProperty": "7db0",
+      "plantSpace": 1,
+      "roadSpace": 3,
+      "variety": "Arara",
+      "plantsNumber": 444.14089526635036,
+      "year": "2025",
+      "user": "1824",
+      "areaSize": 1332.4226857990511,
+      "areaCords": [
+        {
+          "lat": -20.59454494156406,
+          "lng": -42.12944209376595
+        },
+        {
+          "lat": -20.59456502794004,
+          "lng": -42.12997853556893
+        },
+        {
+          "lat": -20.59498684122449,
+          "lng": -42.12980687419198
         }
       ]
     }

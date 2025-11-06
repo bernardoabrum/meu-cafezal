@@ -19,6 +19,7 @@
     overflow-y: scroll;
     gap: 30px;
     border-radius: 15px;
+    box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
 
     @media (max-width: 768px) {
       width: 90%;
@@ -81,10 +82,10 @@
         li {
           padding: 8px 12px;
           cursor: pointer;
-          background-color: #3d4047;
+          background: linear-gradient(90deg, #3d4047, #4c4f57);
 
           &:hover {
-            background-color: #2a2c31;
+            background: #2a2c31;
           }
         }
       }

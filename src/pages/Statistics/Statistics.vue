@@ -29,7 +29,7 @@
         <div class="totals">
           <h2 class="title">Estatísticas gerais ({{ selectedYear }})</h2>
           <p>
-            Numéro total de plantas:
+            Número total de plantas:
             <span>{{ totalPlantsByYear.toFixed() }}</span>
           </p>
           <p>

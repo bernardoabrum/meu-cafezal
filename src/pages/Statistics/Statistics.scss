@@ -19,6 +19,11 @@
 
   .title {
     margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 20px;
+    padding: 10px 15px;
+    width: fit-content;
+    box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
   }
 
   .select {
@@ -53,10 +58,10 @@
         li {
           padding: 8px 12px;
           cursor: pointer;
-          background-color: #3d4047;
+          background: linear-gradient(90deg, #3d4047, #4c4f57);
 
           &:hover {
-            background-color: #2a2c31;
+            background: #2a2c31;
           }
         }
       }
@@ -73,6 +78,16 @@
 
     .totals {
       width: 480px;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
+      transition: all ease 0.3s;
+
+      &:hover {
+        transform: scale(1.01);
+      }
 
       .averages {
         margin-top: 20px;
@@ -80,6 +95,7 @@
 
       p {
         margin-bottom: 10px;
+        font-size: 20px;
       }
 
       span {
@@ -92,6 +108,7 @@
     margin: 40px 0;
     width: 100%;
     overflow-x: auto;
+    box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
 
     table {
       width: 100%;

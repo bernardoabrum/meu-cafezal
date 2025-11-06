@@ -17,6 +17,7 @@
     padding: 120px 10px 30px 20px;
     background-color: #14171f;
     scrollbar-gutter: stable;
+    box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
 
     &::-webkit-scrollbar {
       width: 6px;
@@ -77,7 +78,7 @@
     button {
       border-radius: 0 0 12px 0;
       padding: 8px;
-      background-color: #14171f;
+      background: #14171f;
     }
   }
 }

@@ -20,17 +20,17 @@ body,
 }
 
 .modal {
-  background-color: #14171f;
+  background: linear-gradient(90deg, #1a1e29 0%, #14171f 100%);
 }
 
 input,
 select {
+  background: linear-gradient(90deg, #3d4047, #4c4f57);
   background-color: #3d4047;
   outline: none;
   padding: 20px;
   border-radius: 8px;
-  border: 0;
-  border: solid 1px transparent;
+  border: solid 1px #b1b1b1;
   width: 100%;
 
   @media (max-width: 768px) {
@@ -49,14 +49,16 @@ select {
 }
 
 button {
-  background-color: #20293f;
+  background: linear-gradient(90deg, #20293f, #28334e);
   padding: 20px 30px;
   border-radius: 8px;
   border: 0;
   border-bottom: solid 2px transparent;
   cursor: pointer;
+  transition: all ease 0.3s;
 
   &:hover {
     border-color: white;
+    transform: scale(1.02);
   }
 }

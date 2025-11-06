@@ -19,6 +19,7 @@
     overflow-y: scroll;
     gap: 30px;
     border-radius: 15px;
+    box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
 
     @media (max-width: 768px) {
       width: 90%;
@@ -48,6 +49,12 @@
       gap: 30px;
 
       .name {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 20px;
+        padding: 10px 15px;
+        box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
+
         p {
           font-size: 18px;
         }
