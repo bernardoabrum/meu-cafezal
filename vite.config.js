@@ -14,7 +14,7 @@ export default defineConfig({
       manifest: {
         name: "Meu Cafezal",
         short_name: "Meu Cafezal",
-        theme_color: "#42b883",
+        theme_color: "#14171f",
         icons: [
           {
             src: "/icons/pwa-192x192.png",
