@@ -11,8 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "json-server --watch db.json --port 3001",
-    "startdev": "concurrently \"npm run dev\" \"npm run server\"",
-    "startprod": "concurrently \"npm run build\" \"npm run preview\""
+    "start": "concurrently \"npm run dev\" \"npm run server\"",
+    "prod": "concurrently \"npm run build\" \"npm run preview\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.1",
