@@ -65,10 +65,10 @@
           <LineChart :chartData="totalProduction" />
         </div>
       </div>
+      <h2 class="title">
+        Produtividade de cada propriedade por hectare ({{ selectedYear }})
+      </h2>
       <div class="table">
-        <h2 class="title">
-          Produtividade de cada propriedade por hectare ({{ selectedYear }})
-        </h2>
         <table v-if="properties.length">
           <thead>
             <tr>
