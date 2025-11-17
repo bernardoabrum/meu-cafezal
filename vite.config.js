@@ -4,14 +4,13 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 
-// https://vite.dev/config/
 export default defineConfig({
-   define: {
+  define: {
     __VUE_PROD_DEVTOOLS__: false,
   },
   plugins: [
     vue(),
-    vueDevTools(),
+    process.env.NODE_ENV === "development" && vueDevTools(),
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
@@ -46,7 +45,7 @@ export default defineConfig({
         ],
       },
     }),
-  ],
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
