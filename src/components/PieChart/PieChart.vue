@@ -22,9 +22,15 @@ const props = defineProps({
 });
 
 const chartData = computed(() => {
-  const fields = props.property || 0;
-  const labels = fields.map((f) => f.areaName);
-  const data = fields.map((f) => f.production?.[props.selectedYear] ?? 0);
+  const year = props.selectedYear;
+  const fields = props.property || [];
+
+  const filtered = fields.filter(
+    (f) => f.production && f.production[year] != null && f.production[year] > 0
+  );
+
+  const labels = filtered.map((f) => f.areaName);
+  const data = filtered.map((f) => f.production[year]);
 
   return {
     labels,
