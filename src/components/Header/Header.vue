@@ -12,21 +12,17 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import "./Header.scss";
 import router from "@/router";
-import { useStore } from "@/store";
+import { auth } from "@/firebase";
+import { signOut } from "firebase/auth";
 
 const name = ref("");
-const { setLoggedUser, getLoggedUser } = useStore();
 
-onMounted(() => {
-  name.value = getLoggedUser().name;
-});
-
-const logout = () => {
+const logout = async () => {
+  await signOut(auth);
   router.push("/login");
-  setLoggedUser(null);
 };
 
 const goHome = () => {
