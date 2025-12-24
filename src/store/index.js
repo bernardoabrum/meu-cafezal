@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import {
-  updateArea,
+  updateAreaById,
   getAreasByUser,
   getAreaById,
 } from "@/services/areas.service";
@@ -43,7 +43,7 @@ const store = createStore({
           [currentYear]: totalProduction,
         };
 
-        await updateArea(propertyId, {
+        await updateAreaById(propertyId, {
           production: updatedProduction,
         });
       } catch (err) {

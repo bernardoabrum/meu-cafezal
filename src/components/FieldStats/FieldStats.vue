@@ -110,7 +110,7 @@ import { useStore } from "@/store";
 import {
   getAreasByUser,
   postNewArea,
-  updateArea,
+  updateAreaById,
   deleteAreaById,
 } from "@/services/areas.service";
 
@@ -257,7 +257,7 @@ const saveStats = async () => {
         ...pending,
       });
     } else {
-      await updateArea(selectedArea.id, payload);
+      await updateAreaById(selectedArea.id, payload);
     }
 
     if (isField && fieldForm.ownedProperty) {
@@ -286,7 +286,7 @@ const updatePropertyStats = async (propertyId) => {
       { plants: 0, area: 0 }
     );
 
-    await updateArea(propertyId, {
+    await updateAreaById(propertyId, {
       plantsNumber: totals.plants,
       cultivatedArea: totals.area,
     });

@@ -98,7 +98,7 @@ import "./DataEntry.scss";
 import { useStore } from "@/store";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faPenToSquare, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { updateArea } from "@/services/areas.service";
+import { updateAreaById } from "@/services/areas.service";
 
 const {
   setOpenDataEntry,
@@ -122,7 +122,7 @@ const sendValue = async () => {
     const updatedVolumes = { ...existingVolumes };
     updatedVolumes[currentYear] = (updatedVolumes[currentYear] || 0) + newValue;
 
-    await updateArea(selectedArea.id, {
+    await updateAreaById(selectedArea.id, {
       production: updatedVolumes,
     });
 
@@ -150,7 +150,7 @@ const reviseVolumes = async () => {
         [currentYear]: updatedValue,
       };
 
-      await updateArea(selectedArea.id, {
+      await updateAreaById(selectedArea.id, {
         production: updatedVolumes,
       });
 

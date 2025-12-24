@@ -13,7 +13,6 @@ import {
 
 export const getAreasByUser = async (filters = {}) => {
   const userId = auth.currentUser.uid;
-
   const constraints = [where("user", "==", userId)];
 
   Object.entries(filters).forEach(([field, value]) => {
@@ -23,7 +22,6 @@ export const getAreasByUser = async (filters = {}) => {
   });
 
   const q = query(collection(db, "areas"), ...constraints);
-
   const snapshot = await getDocs(q);
 
   return snapshot.docs.map((doc) => ({
@@ -39,14 +37,10 @@ export const getAreaById = async (areaId) => {
 };
 
 export const postNewArea = async (payload) => {
-  try {
-    await addDoc(collection(db, "areas"), payload);
-  } catch (error) {
-    console.error("Erro ao adicionar área: ", error);
-  }
+  await addDoc(collection(db, "areas"), payload);
 };
 
-export const updateArea = async (areaId, payload) => {
+export const updateAreaById = async (areaId, payload) => {
   const areaRef = doc(db, "areas", areaId);
   await updateDoc(areaRef, payload);
 };

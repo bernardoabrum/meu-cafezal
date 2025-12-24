@@ -17,7 +17,7 @@ import "./EditableMaps.scss";
 import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
-import { getAreasByUser, getAreaById } from "@/services/areas.service";
+import { getAreasByUser } from "@/services/areas.service";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
@@ -116,11 +116,7 @@ const loadAreas = async () => {
 
       google.maps.event.addListener(polygon, "click", async () => {
         try {
-          const freshArea = await getAreaById(area.id);
-          setSelectedArea({
-            id: area.id,
-            ...freshArea,
-          });
+          setSelectedArea({ ...area });
           setOpenDataEntry(true);
         } catch (err) {
           console.error(err);
