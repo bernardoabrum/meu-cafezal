@@ -5,7 +5,7 @@
       <div class="button" v-for="property in properties" :key="property.id">
         <div class="property-button">
           <button @click="toggleExpand(property.id)">
-            <font-awesome-icon
+            <FontAwesomeIcon
               :icon="
                 expanded.includes(property.id) ? faChevronUp : faChevronDown
               "
@@ -28,9 +28,7 @@
     </div>
     <div class="close">
       <button @click="toggleSidebar">
-        <font-awesome-icon
-          :icon="showSidebar ? faChevronLeft : faChevronRight"
-        />
+        <FontAwesomeIcon :icon="showSidebar ? faChevronLeft : faChevronRight" />
       </button>
     </div>
   </div>
@@ -45,28 +43,21 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { ref, onMounted } from "vue";
-import api from "@/api";
 import "./Sidebar.scss";
-import { useStore } from "@/store";
+import { getAreasByUser } from "@/services/areas.service";
 
 let properties = ref([]);
 let fields = ref([]);
 let expanded = ref([]);
 const showSidebar = ref(true);
 const emit = defineEmits(["focusArea", "toggleSidebar"]);
-const { getLoggedUser } = useStore();
 
 onMounted(async () => {
-  const user = getLoggedUser();
-  const resProps = await api.get(
-    `/areas?areaType=property&user=${user.id}`
-  );
-  properties.value = resProps.data;
+  const resProps = await getAreasByUser({ areaType: "property" });
+  properties.value = resProps;
 
-  const resFields = await api.get(
-    `/areas?areaType=field&user=${user.id}`
-  );
-  fields.value = resFields.data;
+  const resFields = await getAreasByUser({ areaType: "field" });
+  fields.value = resFields;
 });
 
 const toggleExpand = (id) => {

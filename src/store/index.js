@@ -1,5 +1,9 @@
 import { createStore } from "vuex";
-import api from "@/api";
+import {
+  updateArea,
+  getAreasByUser,
+  getAreaById,
+} from "@/services/areas.service";
 
 const store = createStore({
   state: {
@@ -45,25 +49,22 @@ const store = createStore({
     },
     async updatePropertyProduction(context, { propertyId, currentYear }) {
       try {
-        const { data: allFields } = await api.get(
-          `/areas?areaType=field&ownedProperty=${propertyId}`
-        );
-
+        const property = await getAreaById(propertyId);
+        const allFields = await getAreasByUser({
+          areaType: "field",
+          ownedProperty: propertyId,
+        });
         const totalProduction = allFields.reduce((acc, field) => {
           return acc + (field.production?.[currentYear] || 0);
         }, 0);
 
-        const { data: property } = await api.get(
-          `/areas/${propertyId}`
-        );
-
-        const updatedProductions = {
+        const updatedProduction = {
           ...(property.production || {}),
           [currentYear]: totalProduction,
         };
 
-        await api.patch(`/areas/${property.id}`, {
-          production: updatedProductions,
+        await updateArea(propertyId, {
+          production: updatedProduction,
         });
       } catch (err) {
         console.error("Erro ao atualizar produção da propriedade:", err);
