@@ -11,15 +11,13 @@ const store = createStore({
     openDataEntry: false,
     pendingArea: {},
     selectedArea: {},
-    loggedUser: null,
-    isAuthenticated: false,
   },
   mutations: {
-    setOpenDataEntry(state, value) {
-      state.openDataEntry = value;
-    },
     setOpenFieldStats(state, value) {
       state.openFieldStats = value;
+    },
+    setOpenDataEntry(state, value) {
+      state.openDataEntry = value;
     },
     setPendingArea(state, area) {
       state.pendingArea = area;
@@ -27,26 +25,8 @@ const store = createStore({
     setSelectedArea(state, area) {
       state.selectedArea = area;
     },
-    setLoggedUser(state, user) {
-      state.loggedUser = user;
-      state.isAuthenticated = !!user;
-      if (user) {
-        localStorage.setItem("authToken", Date.now());
-        localStorage.setItem("loggedUser", JSON.stringify(user));
-      } else {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("loggedUser");
-      }
-    },
   },
   actions: {
-    checkAuth({ commit }) {
-      const token = localStorage.getItem("authToken");
-      if (token) {
-        const savedUser = JSON.parse(localStorage.getItem("loggedUser"));
-        commit("setLoggedUser", savedUser);
-      }
-    },
     async updatePropertyProduction(context, { propertyId, currentYear }) {
       try {
         const property = await getAreaById(propertyId);
@@ -72,23 +52,17 @@ const store = createStore({
     },
   },
   getters: {
-    getOpenDataEntry(state) {
-      return state.openDataEntry;
-    },
     getOpenFieldStats(state) {
       return state.openFieldStats;
     },
-    getSelectedArea(state) {
-      return state.selectedArea;
-    },
-    getLoggedUser(state) {
-      return state.loggedUser;
-    },
-    getIsAuthenticated(state) {
-      return state.isAuthenticated;
+    getOpenDataEntry(state) {
+      return state.openDataEntry;
     },
     getPendingArea(state) {
       return state.pendingArea;
+    },
+    getSelectedArea(state) {
+      return state.selectedArea;
     },
   },
 });
@@ -96,30 +70,24 @@ const store = createStore({
 export const useStore = () => {
   const setOpenFieldStats = (value) => store.commit("setOpenFieldStats", value);
   const getOpenFieldStats = () => store.state.openFieldStats;
-  const setSelectedArea = (area) => store.commit("setSelectedArea", area);
-  const getSelectedArea = () => store.state.selectedArea;
-  const setLoggedUser = (user) => store.commit("setLoggedUser", user);
-  const getLoggedUser = () => store.state.loggedUser;
-  const getIsAuthenticated = () => store.state.isAuthenticated;
-  const setPendingArea = (area) => store.commit("setPendingArea", area);
-  const getPendingArea = () => store.state.pendingArea;
   const setOpenDataEntry = (value) => store.commit("setOpenDataEntry", value);
   const getOpenDataEntry = () => store.state.openDataEntry;
+  const setPendingArea = (area) => store.commit("setPendingArea", area);
+  const getPendingArea = () => store.state.pendingArea;
+  const setSelectedArea = (area) => store.commit("setSelectedArea", area);
+  const getSelectedArea = () => store.state.selectedArea;
   const updatePropertyProduction = (propertyId, currentYear) =>
     store.dispatch("updatePropertyProduction", { propertyId, currentYear });
 
   return {
     setOpenFieldStats,
     getOpenFieldStats,
-    setSelectedArea,
-    getSelectedArea,
-    getLoggedUser,
-    setLoggedUser,
-    getIsAuthenticated,
-    setPendingArea,
-    getPendingArea,
     setOpenDataEntry,
     getOpenDataEntry,
+    setPendingArea,
+    getPendingArea,
+    setSelectedArea,
+    getSelectedArea,
     updatePropertyProduction,
   };
 };
