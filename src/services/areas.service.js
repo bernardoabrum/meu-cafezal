@@ -47,5 +47,19 @@ export const updateAreaById = async (areaId, payload) => {
 
 export const deleteAreaById = async (areaId) => {
   const areaRef = doc(db, "areas", areaId);
+  const snap = await getDoc(areaRef);
+  const { areaType } = snap.data();
+  if (areaType === "property") {
+    const q = query(
+      collection(db, "areas"),
+      where("user", "==", auth.currentUser.uid),
+      where("ownedProperty", "==", areaId)
+    );
+    const subareasSnap = await getDocs(q);
+    const deletePromises = subareasSnap.docs.map((docSnap) =>
+      deleteDoc(docSnap.ref)
+    );
+    await Promise.all(deletePromises);
+  }
   await deleteDoc(areaRef);
 };
