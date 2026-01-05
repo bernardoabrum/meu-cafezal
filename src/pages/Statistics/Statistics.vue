@@ -8,7 +8,7 @@
           <input
             type="number"
             v-model="selectedYear"
-            placeholder="Selecione um ano"
+            placeholder="Selecione o ano"
             readonly
             @focusin="showYears = true"
             @blur="hideYears"
@@ -124,14 +124,12 @@ import "./Statistics.scss";
 import { onMounted, ref, computed } from "vue";
 import { BackButton, LineChart, PieChart, BarChart } from "@/components";
 import { getAreasByUser } from "@/services/areas.service";
-import { useStore } from "@/store";
 
 const selectedYear = ref("");
 const totalProduction = ref({});
 const registeredYears = ref([]);
 const properties = ref([]);
 const showYears = ref(false);
-const { getLoggedUser } = useStore();
 
 onMounted(async () => {
   await getData();
@@ -140,6 +138,8 @@ onMounted(async () => {
 
   if (registeredYears.value.includes(currentYear)) {
     selectedYear.value = currentYear;
+  } else {
+    selectedYear.value = registeredYears.value[0];
   }
 });
 
