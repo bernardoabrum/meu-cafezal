@@ -5,10 +5,14 @@ body,
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 18px;
+  font-size: 24px;
   color: white;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
+
+    @media (max-width: 768px) {
+     font-size: 18px;
+  }
 }
 
 html,
