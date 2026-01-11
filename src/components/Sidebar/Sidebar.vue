@@ -4,7 +4,7 @@
       <h2>Propriedades</h2>
       <div class="button" v-for="property in properties" :key="property.id">
         <div class="property-button">
-          <button @click="toggleExpand(property.id)">
+          <button class="arrow" @click="toggleExpand(property.id)">
             <FontAwesomeIcon
               :icon="
                 expanded.includes(property.id) ? faChevronUp : faChevronDown

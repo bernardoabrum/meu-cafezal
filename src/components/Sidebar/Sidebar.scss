@@ -2,19 +2,19 @@
   display: flex;
   position: fixed;
   transition: all 0.3s ease;
-  height: 100vh;
+  height: 100dvh;
   z-index: 1;
 
   &.hidden {
-    transform: translateX(-310px);
+    transform: translateX(-240px);
   }
 
   .container {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    width: 310px;
-    padding: 120px 10px 30px 20px;
+    width: 240px;
+    padding: 120px 20px 30px 20px;
     background-color: #14171f;
     scrollbar-gutter: stable;
     box-shadow: 6px 10px 20px rgba(0, 0, 0, 0.3);
@@ -59,8 +59,16 @@
       .property-button {
         display: flex;
 
+        .arrow {
+          padding: 0 20px;
+        }
+
         .name {
           width: 100%;
+        }
+
+        button {
+          padding: 10px 0;
         }
       }
     }

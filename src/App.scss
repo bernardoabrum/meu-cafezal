@@ -5,7 +5,7 @@ body,
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 24px;
+  font-size: 18px;
   color: white;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
@@ -19,7 +19,7 @@ body {
 .page {
   padding: 40px 60px;
   background: linear-gradient(130deg, #14171f 0%, #090c14 100%);
-  min-height: 100vh;
+  min-height: 100dvh;
 
   @media (max-width: 768px) {
     padding: 40px 20px;
