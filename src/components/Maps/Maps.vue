@@ -20,10 +20,11 @@
 
 <script setup>
 import "./Maps.scss";
-import api from "@/api";
 import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
+import { getAreasByUser } from "@/services/areas.service";
+import { auth } from "@/firebase";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
@@ -31,8 +32,8 @@ const googleMap = ref(null);
 const isDrawing = ref(false);
 let mapInstance = ref(null);
 let drawingManager = null;
-const { setOpenFieldStats, getLoggedUser, setPendingArea } = useStore();
-const user = getLoggedUser();
+const { setOpenFieldStats, setPendingArea } = useStore();
+const userId = auth.currentUser.uid;
 
 watch(
   () => googleMap.value?.map,
@@ -83,7 +84,7 @@ const configMaps = () => {
     const path = event.overlay.getPath().getArray();
     const areaSize = computeArea(path);
     const payload = {
-      user: user.id,
+      user: userId,
       areaSize,
       areaCords: path.map((point) => ({
         lat: point.lat(),
@@ -99,9 +100,7 @@ const configMaps = () => {
 
 const loadAreas = async () => {
   try {
-    const { data } = await api.get(
-      `/areas?user=${user.id}`
-    );
+    const data = await getAreasByUser();
     data.forEach((area) => {
       const polygon = new google.maps.Polygon({
         paths: area.areaCords,

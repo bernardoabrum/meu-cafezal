@@ -5,10 +5,16 @@
       <div class="general-container">
         <p>Selecione o tipo de área:</p>
         <div class="checkbox" v-if="!Object.keys(selectedArea).length">
-          <div :class="['inputs', {active: form.areaType == 'property'}]" @click="form.areaType = 'property'">
+          <div
+            :class="['inputs', { active: form.areaType == 'property' }]"
+            @click="form.areaType = 'property'"
+          >
             <span>Propriedade</span>
           </div>
-          <div :class="['inputs', {active: form.areaType == 'field'}]" @click="form.areaType = 'field'">
+          <div
+            :class="['inputs', { active: form.areaType == 'field' }]"
+            @click="form.areaType = 'field'"
+          >
             <span>Talhão</span>
           </div>
         </div>
@@ -101,11 +107,15 @@
 import "./FieldStats.scss";
 import { onMounted, reactive, ref, watch } from "vue";
 import { useStore } from "@/store";
-import api from "@/api";
+import {
+  getAreasByUser,
+  postNewArea,
+  updateAreaById,
+  deleteAreaById,
+} from "@/services/areas.service";
 
 const {
   setOpenFieldStats,
-  getLoggedUser,
   getPendingArea,
   setPendingArea,
   getSelectedArea,
@@ -113,7 +123,6 @@ const {
   updatePropertyProduction,
 } = useStore();
 
-const user = getLoggedUser();
 const selectedArea = getSelectedArea();
 const properties = ref([]);
 const selectedProperty = ref("");
@@ -136,9 +145,7 @@ const fieldForm = reactive({
 
 onMounted(async () => {
   try {
-    const { data } = await api.get(
-      `/areas?areaType=property&user=${user.id}`
-    );
+    const data = await getAreasByUser({ areaType: "property" });
     properties.value = data;
 
     if (Object.keys(selectedArea).length) {
@@ -146,7 +153,6 @@ onMounted(async () => {
         areaName: selectedArea.areaName,
         areaType: selectedArea.areaType,
       });
-
       if (selectedArea.areaType === "field") {
         Object.assign(fieldForm, {
           roadSpace: selectedArea.roadSpace,
@@ -154,6 +160,7 @@ onMounted(async () => {
           ownedProperty: selectedArea.ownedProperty,
           variety: selectedArea.variety || "",
         });
+
         selectedProperty.value = data.find(
           (p) => p.id === selectedArea.ownedProperty
         );
@@ -166,9 +173,7 @@ onMounted(async () => {
 });
 
 const getVarieties = async () => {
-  const { data } = await api.get(
-    `/areas?areaType=field&user=${user.id}`
-  );
+  const data = await getAreasByUser({ areaType: "field" });
   data.forEach((field) => {
     if (!suggestions.value.includes(field.variety)) {
       suggestions.value.push(field.variety);
@@ -211,7 +216,6 @@ const saveStats = async () => {
     alert("Preencha todos os campos!");
     return;
   }
-
   if (form.areaType == "field") {
     if (
       !form.areaName ||
@@ -233,7 +237,7 @@ const saveStats = async () => {
     ...form,
     ...fieldForm,
     plantsNumber,
-    cultivatedArea: isField ? undefined : base.cultivatedArea || 0,
+    cultivatedArea: base.cultivatedArea || 0,
     year: currentYear.toString(),
   };
 
@@ -241,18 +245,19 @@ const saveStats = async () => {
     delete payload.ownedProperty;
     delete payload.roadSpace;
     delete payload.plantSpace;
+    delete payload.variety;
+  } else {
+    delete payload.cultivatedArea;
   }
 
   try {
     if (!Object.keys(selectedArea).length) {
-      await api.post("/areas", {
+      await postNewArea({
         ...payload,
         ...pending,
       });
     } else {
-      await api.patch(`/areas/${selectedArea.id}`, {
-        ...payload,
-      });
+      await updateAreaById(selectedArea.id, payload);
     }
 
     if (isField && fieldForm.ownedProperty) {
@@ -268,9 +273,10 @@ const saveStats = async () => {
 
 const updatePropertyStats = async (propertyId) => {
   try {
-    const { data: fields } = await api.get(
-      `/areas?ownedProperty=${propertyId}&areaType=field`
-    );
+    const fields = await getAreasByUser({
+      ownedProperty: propertyId,
+      areaType: "field",
+    });
 
     const totals = fields.reduce(
       (acc, f) => ({
@@ -280,7 +286,7 @@ const updatePropertyStats = async (propertyId) => {
       { plants: 0, area: 0 }
     );
 
-    await api.patch(`/areas/${propertyId}`, {
+    await updateAreaById(propertyId, {
       plantsNumber: totals.plants,
       cultivatedArea: totals.area,
     });
@@ -298,7 +304,7 @@ const deleteArea = async () => {
   try {
     const ownedPropertyId = selectedArea?.ownedProperty;
 
-    await api.delete(`/areas/${selectedArea.id}`);
+    await deleteAreaById(selectedArea.id);
 
     if (selectedArea.areaType === "field" && ownedPropertyId) {
       await updatePropertyStats(ownedPropertyId);

@@ -8,7 +8,7 @@
           <input
             type="number"
             v-model="selectedYear"
-            placeholder="Selecione um ano"
+            placeholder="Selecione o ano"
             readonly
             @focusin="showYears = true"
             @blur="hideYears"
@@ -123,15 +123,13 @@
 import "./Statistics.scss";
 import { onMounted, ref, computed } from "vue";
 import { BackButton, LineChart, PieChart, BarChart } from "@/components";
-import api from "@/api";
-import { useStore } from "@/store";
+import { getAreasByUser } from "@/services/areas.service";
 
 const selectedYear = ref("");
 const totalProduction = ref({});
 const registeredYears = ref([]);
 const properties = ref([]);
 const showYears = ref(false);
-const { getLoggedUser } = useStore();
 
 onMounted(async () => {
   await getData();
@@ -140,6 +138,8 @@ onMounted(async () => {
 
   if (registeredYears.value.includes(currentYear)) {
     selectedYear.value = currentYear;
+  } else {
+    selectedYear.value = registeredYears.value[0];
   }
 });
 
@@ -180,13 +180,8 @@ const totalPlantsByYear = computed(() => {
 
 const getData = async () => {
   try {
-    const { data: propertiesData } = await api.get(
-      `/areas?areaType=property&user=${getLoggedUser().id}`
-    );
-
-    const { data: fieldsData } = await api.get(
-      `/areas?areaType=field&user=${getLoggedUser().id}`
-    );
+    const propertiesData = await getAreasByUser({ areaType: "property" });
+    const fieldsData = await getAreasByUser({ areaType: "field" });
 
     const combinedData = propertiesData.map((property) => {
       const relatedFields = fieldsData.filter(

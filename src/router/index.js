@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import * as pages from "@/pages";
-import { useStore } from "@/store";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,21 +46,34 @@ const router = createRouter({
   ],
 });
 
+let authInitialized = false;
+
 router.beforeEach((to, from, next) => {
-  const { getIsAuthenticated } = useStore();
+  const auth = getAuth();
+
+  if (!authInitialized) {
+    authInitialized = true;
+
+    onAuthStateChanged(auth, () => {
+      next(to.fullPath);
+    });
+
+    return;
+  }
+
+  const user = auth.currentUser;
   const publicPages = ["/login"];
   const authRequired = !publicPages.includes(to.path);
-  const loggedUser = getIsAuthenticated();
 
-  if (authRequired && !loggedUser) {
+  if (authRequired && !user) {
     return next("/login");
   }
 
-  if (loggedUser && to.path === "/login") {
+  if (user && to.path === "/login") {
     return next("/home");
   }
 
-  next();
+  return next();
 });
 
 export default router;
