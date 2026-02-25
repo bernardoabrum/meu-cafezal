@@ -17,6 +17,7 @@ import "./Header.scss";
 import router from "@/router";
 import { auth } from "@/firebase";
 import { signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 const name = ref("");
 
@@ -28,4 +29,10 @@ const logout = async () => {
 const goHome = () => {
   router.push("/home");
 };
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    name.value = user.displayName;
+  }
+});
 </script>
