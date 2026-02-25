@@ -76,6 +76,46 @@
       }
     }
 
+    .production {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+
+      .by-year {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .container {
+          position: relative;
+          width: 100px;
+
+          input {
+            padding: 10px;
+          }
+
+          ul {
+            position: absolute;
+            list-style: none;
+            border-radius: 8px;
+            width: 100%;
+            z-index: 2;
+
+            li {
+              padding: 8px 12px;
+              cursor: pointer;
+              background: linear-gradient(90deg, #3d4047, #4c4f57);
+
+              &:hover {
+                background: #2a2c31;
+              }
+            }
+          }
+        }
+      }
+    }
+
     .register {
       display: flex;
       flex-direction: column;

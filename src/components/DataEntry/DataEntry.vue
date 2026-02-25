@@ -37,6 +37,37 @@
           </p>
         </div>
       </div>
+      <div class="production" v-if="selectedArea.areaType == 'field'">
+        <div class="by-year">
+          <p>
+            Produção ano:
+            {{ productionPerHa.toFixed(2) }} volumes/ha
+          </p>
+          <div class="container">
+            <input
+              type="number"
+              v-model="selectedYear"
+              placeholder="Selecione o ano"
+              readonly
+              @focusin="showYears = true"
+              @blur="hideYears"
+              @focusout="hideYears"
+            />
+            <ul v-if="showYears">
+              <li
+                v-for="year in registeredYears"
+                :key="year"
+                @click="selectYear(year)"
+              >
+                {{ year }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="average">
+          <p>Pordução média: {{ averageProductionHa.toFixed(2) }} volumes/ha</p>
+        </div>
+      </div>
       <div class="register" v-if="selectedArea.areaType == 'field'">
         <p>Lançar quantidade de volumes produzidos</p>
         <div class="send">
@@ -93,7 +124,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import "./DataEntry.scss";
 import { useStore } from "@/store";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -107,11 +138,48 @@ const {
   setOpenFieldStats,
   updatePropertyProduction,
 } = useStore();
+
 const selectedArea = getSelectedArea();
 const currentProduction = ref(0);
 const showVolumes = ref(true);
 const revisedValue = ref(0);
 const currentYear = new Date().getFullYear();
+const fieldProduction = selectedArea.production;
+const fieldAreaHa = selectedArea.areaSize / 10000;
+const registeredYears = selectedArea.production
+  ? Object.keys(selectedArea.production).sort((a, b) => b - a)
+  : [];
+const showYears = ref(false);
+const selectedYear = ref("");
+const productionPerHa = ref(0);
+const averageProductionHa = ref(0);
+
+onMounted(() => {
+  if (registeredYears.includes(currentYear.toString())) {
+    selectedYear.value = currentYear;
+  } else {
+    selectedYear.value = registeredYears[0];
+  }
+  productionPerHa.value =
+    fieldProduction[selectedYear.value] / fieldAreaHa || 0;
+  averageProductionHa.value =
+    Object.values(fieldProduction).reduce((sum, val) => sum + val, 0) /
+      registeredYears.length /
+      fieldAreaHa || 0;
+});
+
+const hideYears = () => {
+  setTimeout(() => {
+    showYears.value = false;
+  }, 200);
+};
+
+const selectYear = (year) => {
+  selectedYear.value = year;
+  showYears.value = false;
+  productionPerHa.value =
+    fieldProduction[selectedYear.value] / fieldAreaHa || 0;
+};
 
 const sendValue = async () => {
   const newValue = Math.max(0, Number(currentProduction.value));
