@@ -86,7 +86,7 @@
       </div>
       <div class="buttons">
         <button @click="closeModal">Fechar</button>
-        <button @click="editInfo">Editar informações</button>
+        <button @click="editInfo">Editar</button>
       </div>
     </div>
   </div>

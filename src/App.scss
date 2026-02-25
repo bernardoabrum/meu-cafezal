@@ -10,8 +10,8 @@ body,
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
 
-    @media (max-width: 768px) {
-     font-size: 18px;
+  @media (max-width: 768px) {
+    font-size: 18px;
   }
 }
 
@@ -70,6 +70,5 @@ button {
 
   &:hover {
     border-color: white;
-    transform: scale(1.02);
   }
 }

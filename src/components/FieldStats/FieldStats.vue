@@ -96,7 +96,7 @@
         <button v-if="Object.keys(selectedArea).length" @click="closeModal">
           Fechar
         </button>
-        <button @click="deleteArea">Excluir área</button>
+        <button class="delete" @click="deleteArea">Excluir</button>
         <button @click="saveStats">Salvar</button>
       </div>
     </div>
@@ -162,7 +162,7 @@ onMounted(async () => {
         });
 
         selectedProperty.value = data.find(
-          (p) => p.id === selectedArea.ownedProperty
+          (p) => p.id === selectedArea.ownedProperty,
         );
       }
     }
@@ -283,7 +283,7 @@ const updatePropertyStats = async (propertyId) => {
         plants: acc.plants + (f.plantsNumber || 0),
         area: acc.area + (f.areaSize || 0),
       }),
-      { plants: 0, area: 0 }
+      { plants: 0, area: 0 },
     );
 
     await updateAreaById(propertyId, {
