@@ -1,14 +1,21 @@
 <template>
-  <Header v-if="isAuthenticated" />
+  <Header v-if="user" />
   <router-view />
 </template>
 
 <script setup>
 import "./App.scss";
 import { Header } from "@/components";
-import { computed } from "vue";
-import { useStore } from "@/store";
+import { ref, onMounted } from "vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const { getIsAuthenticated } = useStore();
-const isAuthenticated = computed(() => getIsAuthenticated());
+const user = ref(null);
+
+onMounted(() => {
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, (firebaseUser) => {
+    user.value = firebaseUser;
+  });
+});
 </script>

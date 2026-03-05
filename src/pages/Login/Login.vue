@@ -63,15 +63,18 @@
 <script setup>
 import "./Login.scss";
 import { ref } from "vue";
-import api from "@/api";
-import { useStore } from "@/store";
 import { useRouter } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { auth } from "@/firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 const router = useRouter();
-const { setLoggedUser } = useStore();
-const showRegister = ref(true);
+const showRegister = ref(false);
 const name = ref("");
 const email = ref("");
 const password = ref("");
@@ -82,28 +85,29 @@ const inputTypes = ref({
 });
 
 const loginButton = async () => {
-  if (!email.value || !password.value) {
-    alert("Por favor, preencha todos os campos.");
-    return;
-  }
-
   try {
-    const { data } = await api.get("/users", {
-      params: {
-        email: email.value,
-        password: password.value,
-      },
-    });
-
-    if (data.length) {
-      const user = data[0];
-      setLoggedUser(user);
-      router.push("/home");
-    } else {
-      alert("Email ou senha incorretos.");
-    }
+    await signInWithEmailAndPassword(auth, email.value, password.value);
+    router.push("/home");
   } catch (err) {
-    console.error("Erro ao fazer login:", err);
+    console.error("Erro ao fazer login:", err.code);
+
+    switch (err.code) {
+      case "auth/invalid-email":
+        alert("O email informado é inválido");
+        break;
+
+      case "auth/invalid-credential":
+        alert("Credenciais inválidas");
+        break;
+
+      case "auth/missing-password":
+        alert("Insira uma senha");
+        break;
+
+      default:
+        alert("Erro ao tentar entrar");
+        break;
+    }
   }
 };
 
@@ -127,35 +131,32 @@ const createAccount = async () => {
     !password.value ||
     !confirmPassword.value
   ) {
-    alert("Por favor, preencha todos os campos.");
+    alert("Por favor, preencha todos os campos");
     return;
   }
 
   if (password.value !== confirmPassword.value) {
-    alert("As senhas não coincidem!");
+    alert("As senhas não coincidem");
     return;
   }
 
   try {
-    const { data: existingUsers } = await api.get(
-      "/users",
-      {
-        params: { email: email.value },
-      }
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
     );
 
-    if (existingUsers.length > 0) {
-      alert("Este email já está cadastrado!");
-      return;
-    }
+    const user = userCredential.user;
 
-    await api.post("/users", {
-      name: name.value,
-      email: email.value,
-      password: password.value,
+    await updateProfile(user, {
+      displayName: name.value,
     });
 
+    router.push("/home");
+
     alert("Conta criada com sucesso!");
+
     name.value = "";
     email.value = "";
     password.value = "";
@@ -163,6 +164,32 @@ const createAccount = async () => {
     showRegister.value = false;
   } catch (err) {
     console.error("Erro ao criar conta:", err);
+
+    switch (err.code) {
+      case "auth/email-already-in-use":
+        alert("Este email já está cadastrado");
+        break;
+
+      case "auth/invalid-email":
+        alert("O email informado não é válido");
+        break;
+
+      case "auth/weak-password":
+        alert("A senha deve ter pelo menos 6 caracteres");
+        break;
+
+      case "auth/missing-password":
+        alert("Digite uma senha para criar a conta");
+        break;
+
+      case "auth/operation-not-allowed":
+        alert("A criação de contas está desativada");
+        break;
+
+      default:
+        alert("Erro ao criar conta");
+        break;
+    }
   }
 };
 </script>

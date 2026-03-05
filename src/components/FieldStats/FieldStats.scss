@@ -65,7 +65,7 @@
 
           &:hover {
             background-color: #2a2c31;
-          } 
+          }
 
           &.active {
             background-color: #2a2c31;
@@ -134,6 +134,10 @@
 
       button {
         padding: 12px;
+      }
+
+      .delete {
+        background: linear-gradient(90deg, rgb(133, 0, 0), rgb(116, 0, 0));
       }
     }
   }

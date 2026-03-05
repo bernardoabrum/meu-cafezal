@@ -10,9 +10,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "server": "json-server --watch db.json --port 3001",
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "prod": "concurrently \"npm run build\" \"npm run preview\""
+    "start": "concurrently \"npm run dev\"",
+    "prod": "concurrently \"npm run build\" \"firebase deploy\"",
+    "emulator": "concurrently \"npm run build\" \"firebase emulators:start --only hosting\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.1",
@@ -20,6 +20,7 @@
     "@fortawesome/vue-fontawesome": "^3.1.2",
     "axios": "^1.11.0",
     "chart.js": "^4.5.1",
+    "firebase": "^12.6.0",
     "json-server": "^0.17.3",
     "sass": "^1.90.0",
     "scss": "^0.2.4",

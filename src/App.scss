@@ -9,6 +9,10 @@ body,
   color: white;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 }
 
 html,
@@ -19,7 +23,7 @@ body {
 .page {
   padding: 40px 60px;
   background: linear-gradient(130deg, #14171f 0%, #090c14 100%);
-  min-height: 100vh;
+  min-height: 100dvh;
 
   @media (max-width: 768px) {
     padding: 40px 20px;
@@ -66,6 +70,5 @@ button {
 
   &:hover {
     border-color: white;
-    transform: scale(1.02);
   }
 }

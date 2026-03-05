@@ -17,14 +17,13 @@ import "./EditableMaps.scss";
 import { ref, onMounted, watch } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
-import api from "@/api";
+import { getAreasByUser } from "@/services/areas.service";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
 const googleMap = ref(null);
 let mapInstance = ref(null);
-const { setSelectedArea, getLoggedUser, setOpenDataEntry } = useStore();
-const user = getLoggedUser();
+const { setSelectedArea, setOpenDataEntry } = useStore();
 const polygons = ref([]);
 
 const props = defineProps({
@@ -99,16 +98,17 @@ const configMaps = () => {
 
 const loadAreas = async () => {
   try {
-    const { data } = await api.get(
-      `/areas?user=${user.id}`
-    );
+    const data = await getAreasByUser();
     data.forEach((area) => {
+      const isProperty = area.areaType === "property";
+
       const polygon = new google.maps.Polygon({
         paths: area.areaCords,
         fillColor: area.areaType === "property" ? "#3357FF" : "#33FF57",
         strokeColor: area.areaType === "property" ? "#3357FF" : "#33FF57",
         fillOpacity: 0.3,
         strokeWeight: 1,
+        zIndex: isProperty ? 1 : 2,
       });
 
       polygon.setMap(mapInstance);
@@ -116,10 +116,7 @@ const loadAreas = async () => {
 
       google.maps.event.addListener(polygon, "click", async () => {
         try {
-          const { data: freshArea } = await api.get(
-            `/areas/${area.id}`
-          );
-          setSelectedArea(freshArea);
+          setSelectedArea({ ...area });
           setOpenDataEntry(true);
         } catch (err) {
           console.error(err);
