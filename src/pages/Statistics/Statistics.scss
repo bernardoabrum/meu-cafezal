@@ -3,6 +3,10 @@
   flex-direction: column;
   margin-top: 100px;
 
+  &.no-data {
+    margin-top: 0;
+  }
+
   .cmp-back-button {
     background-color: #20293f;
     border-color: #20293f;

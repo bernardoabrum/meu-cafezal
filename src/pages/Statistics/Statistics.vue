@@ -1,5 +1,7 @@
 <template>
-  <div class="page statistics-page">
+  <div
+    :class="['page statistics-page', { 'no-data': !registeredYears.length }]"
+  >
     <BackButton />
     <div v-if="registeredYears.length">
       <div class="select">
@@ -101,7 +103,7 @@
         <div class="bar-chart">
           <BarChart
             v-for="property in properties.filter(
-              (p) => p.production && p.production[selectedYear] > 0
+              (p) => p.production && p.production[selectedYear] > 0,
             )"
             :key="property.id"
             :selectedYear="selectedYear"
@@ -154,11 +156,11 @@ const cultivatedAreaByYear = computed(() => {
   const year = Number(selectedYear.value);
   return properties.value.reduce((acc, property) => {
     const fieldsUpToYear = property.fields.filter(
-      (field) => Number(field.year) <= year
+      (field) => Number(field.year) <= year,
     );
     const propertyTotal = fieldsUpToYear.reduce(
       (sum, field) => sum + (field.areaSize || 0),
-      0
+      0,
     );
     return acc + propertyTotal;
   }, 0);
@@ -168,11 +170,11 @@ const totalPlantsByYear = computed(() => {
   const year = Number(selectedYear.value);
   return properties.value.reduce((acc, property) => {
     const fieldsUpToYear = property.fields.filter(
-      (field) => Number(field.year) <= year
+      (field) => Number(field.year) <= year,
     );
     const propertyTotal = fieldsUpToYear.reduce(
       (sum, field) => sum + Number(field.plantsNumber || 0),
-      0
+      0,
     );
     return acc + propertyTotal;
   }, 0);
@@ -185,7 +187,7 @@ const getData = async () => {
 
     const combinedData = propertiesData.map((property) => {
       const relatedFields = fieldsData.filter(
-        (field) => field.ownedProperty === property.id
+        (field) => field.ownedProperty === property.id,
       );
       return {
         ...property,
@@ -213,18 +215,18 @@ const getData = async () => {
 const productionPerHectare = computed(() => {
   const selected = Number(selectedYear.value);
   const filteredProperties = properties.value.filter(
-    (property) => Number(property.year) <= selected
+    (property) => Number(property.year) <= selected,
   );
 
   return filteredProperties.map((property) => {
     const production = property.production?.[selected] ?? 0;
     const productiveFields = property.fields.filter(
-      (field) => (field.production?.[selected] ?? 0) > 0
+      (field) => (field.production?.[selected] ?? 0) > 0,
     );
 
     const productiveArea = productiveFields.reduce(
       (sum, field) => sum + (field.areaSize || 0),
-      0
+      0,
     );
 
     const areaHectares = productiveArea / 10000 || 1;
