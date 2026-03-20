@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "concurrently \"npm run dev\"",
-    "prod": "concurrently \"npm run build\" \"firebase deploy\"",
+    "prod": "concurrently \"npm run build\" \"firebase deploy --only hosting\"",
     "emulator": "concurrently \"npm run build\" \"firebase emulators:start --only hosting\""
   },
   "dependencies": {
