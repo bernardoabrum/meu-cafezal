@@ -30,10 +30,13 @@ const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
 const googleMap = ref(null);
 const isDrawing = ref(false);
-let mapInstance = ref(null);
-let drawingManager = null;
-const { setOpenFieldStats, setPendingArea } = useStore();
 const userId = auth.currentUser.uid;
+let mapInstance = null;
+let polygon = null;
+let path = [];
+let mapClickListener = null;
+
+const { setOpenFieldStats, setPendingArea } = useStore();
 
 watch(
   () => googleMap.value?.map,
@@ -44,7 +47,7 @@ watch(
     configMaps();
     loadAreas();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(() => {
@@ -72,30 +75,6 @@ const configMaps = () => {
       },
     ],
   });
-
-  drawingManager = new google.maps.drawing.DrawingManager({
-    drawingMode: null,
-    drawingControl: false,
-  });
-
-  drawingManager.setMap(mapInstance);
-
-  google.maps.event.addListener(drawingManager, "overlaycomplete", (event) => {
-    const path = event.overlay.getPath().getArray();
-    const areaSize = computeArea(path);
-    const payload = {
-      user: userId,
-      areaSize,
-      areaCords: path.map((point) => ({
-        lat: point.lat(),
-        lng: point.lng(),
-      })),
-    };
-    isDrawing.value = false;
-    drawingManager.setDrawingMode(null);
-    setPendingArea(payload);
-    setOpenFieldStats(true);
-  });
 };
 
 const loadAreas = async () => {
@@ -121,11 +100,54 @@ const computeArea = (path) => {
 
 const startDrawing = () => {
   isDrawing.value = true;
-  drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+
+  mapInstance.setOptions({
+    draggableCursor: "crosshair",
+  });
+
+  polygon = new google.maps.Polygon({
+    paths: path,
+    editable: true,
+    strokeWeight: 2,
+    fillOpacity: 0.3,
+    map: mapInstance,
+  });
+
+  mapClickListener = mapInstance.addListener("click", (event) => {
+    const point = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    };
+
+    path.push(point);
+    polygon.setPath(path);
+  });
 };
 
 const stopDrawing = () => {
   isDrawing.value = false;
-  drawingManager.setDrawingMode(null);
+
+  mapInstance.setOptions({
+    draggableCursor: "default",
+  });
+
+  if (mapClickListener) {
+    google.maps.event.removeListener(mapClickListener);
+  }
+
+  const polygonPath = polygon.getPath().getArray();
+  const areaSize = computeArea(polygonPath);
+
+  const payload = {
+    user: userId,
+    areaSize,
+    areaCords: polygonPath.map((point) => ({
+      lat: point.lat(),
+      lng: point.lng(),
+    })),
+  };
+
+  setPendingArea(payload);
+  setOpenFieldStats(true);
 };
 </script>
