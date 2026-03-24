@@ -31,12 +31,15 @@
         <div class="totals">
           <h2 class="title">Estatísticas gerais ({{ selectedYear }})</h2>
           <p>
-            Número total de plantas:
-            <span>{{ totalPlantsByYear.toFixed() }}</span>
+            Área total: <span>{{ totalArea.toFixed() }}m²</span>
           </p>
           <p>
             Área cultivada total:
             <span>{{ cultivatedAreaByYear.toFixed() }}m²</span>
+          </p>
+          <p>
+            Número total de plantas:
+            <span>{{ totalPlantsByYear.toFixed() }}</span>
           </p>
           <p>
             Produção total em volumes:
@@ -164,6 +167,14 @@ const cultivatedAreaByYear = computed(() => {
     );
     return acc + propertyTotal;
   }, 0);
+});
+
+const totalArea = computed(() => {
+  const year = Number(selectedYear.value);
+
+  return properties.value
+    .filter((property) => property.year <= year)
+    .reduce((acc, property) => acc + (property.areaSize || 0), 0);
 });
 
 const totalPlantsByYear = computed(() => {
