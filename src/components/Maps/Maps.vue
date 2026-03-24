@@ -85,6 +85,7 @@ const loadAreas = async () => {
         paths: area.areaCords,
         fillOpacity: 0.3,
         strokeWeight: 1,
+        clickable: false,
       });
 
       polygon.setMap(mapInstance);
