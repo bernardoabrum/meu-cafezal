@@ -64,6 +64,10 @@ watch(editingSelectedArea, (isEditing) => {
     polygon.setEditable(isEditing && isSelected);
     polygon.setDraggable(isEditing && isSelected);
 
+    polygon.setOptions({
+      clickable: !isEditing || isSelected,
+    });
+
     if (isEditing && isSelected) {
       setPolygonStyle(polygon, true);
     } else {
