@@ -96,6 +96,7 @@
         <button v-if="Object.keys(selectedArea).length" @click="closeModal">
           Fechar
         </button>
+        <button @click="editArea">Editar área</button>
         <button class="delete" @click="deleteArea">Excluir</button>
         <button @click="saveStats">Salvar</button>
       </div>
@@ -112,6 +113,7 @@ import {
   postNewArea,
   updateAreaById,
   deleteAreaById,
+  updatePropertyStats,
 } from "@/services/areas.service";
 
 const {
@@ -121,7 +123,10 @@ const {
   getSelectedArea,
   setSelectedArea,
   updatePropertyProduction,
+  setEditingSelectedArea,
 } = useStore();
+
+const emit = defineEmits(["editArea"]);
 
 const selectedArea = getSelectedArea();
 const properties = ref([]);
@@ -271,30 +276,6 @@ const saveStats = async () => {
   window.location.reload();
 };
 
-const updatePropertyStats = async (propertyId) => {
-  try {
-    const fields = await getAreasByUser({
-      ownedProperty: propertyId,
-      areaType: "field",
-    });
-
-    const totals = fields.reduce(
-      (acc, f) => ({
-        plants: acc.plants + (f.plantsNumber || 0),
-        area: acc.area + (f.areaSize || 0),
-      }),
-      { plants: 0, area: 0 },
-    );
-
-    await updateAreaById(propertyId, {
-      plantsNumber: totals.plants,
-      cultivatedArea: totals.area,
-    });
-  } catch (err) {
-    console.error("Erro ao recalcular estatísticas:", err);
-  }
-};
-
 const deleteArea = async () => {
   if (!Object.keys(selectedArea).length) {
     window.location.reload();
@@ -322,5 +303,10 @@ const deleteArea = async () => {
 const closeModal = () => {
   setOpenFieldStats(false);
   setSelectedArea({});
+};
+
+const editArea = () => {
+  setEditingSelectedArea(true);
+  setOpenFieldStats(false);
 };
 </script>

@@ -53,13 +53,82 @@ export const deleteAreaById = async (areaId) => {
     const q = query(
       collection(db, "areas"),
       where("user", "==", auth.currentUser.uid),
-      where("ownedProperty", "==", areaId)
+      where("ownedProperty", "==", areaId),
     );
     const subareasSnap = await getDocs(q);
     const deletePromises = subareasSnap.docs.map((docSnap) =>
-      deleteDoc(docSnap.ref)
+      deleteDoc(docSnap.ref),
     );
     await Promise.all(deletePromises);
   }
   await deleteDoc(areaRef);
+};
+
+export const updatePropertyStats = async (propertyId) => {
+  try {
+    const fields = await getAreasByUser({
+      ownedProperty: propertyId,
+      areaType: "field",
+    });
+
+    const totals = fields.reduce(
+      (acc, f) => ({
+        plants: acc.plants + (f.plantsNumber || 0),
+        area: acc.area + (f.areaSize || 0),
+      }),
+      { plants: 0, area: 0 },
+    );
+
+    await updateAreaById(propertyId, {
+      plantsNumber: totals.plants,
+      cultivatedArea: totals.area,
+    });
+  } catch (err) {
+    console.error("Erro ao recalcular estatísticas:", err);
+    throw err;
+  }
+};
+
+export const updateAreaGeometry = async (areaId, polygonPath) => {
+  const areaRef = doc(db, "areas", areaId);
+  const areaSnap = await getDoc(areaRef);
+
+  if (!areaSnap.exists()) {
+    throw new Error("Área não encontrada");
+  }
+
+  const areaData = areaSnap.data();
+
+  const areaSize = google.maps.geometry.spherical.computeArea(polygonPath);
+
+  const areaCords = polygonPath.map((point) => ({
+    lat: point.lat(),
+    lng: point.lng(),
+  }));
+
+  let plantsNumber = 0;
+
+  if (
+    areaData.areaType === "field" &&
+    areaData.roadSpace &&
+    areaData.plantSpace
+  ) {
+    plantsNumber = areaSize / areaData.roadSpace / areaData.plantSpace;
+  }
+
+  await updateDoc(areaRef, {
+    areaSize,
+    areaCords,
+    plantsNumber,
+  });
+
+  if (areaData.areaType === "field" && areaData.ownedProperty) {
+    await updatePropertyStats(areaData.ownedProperty);
+  }
+
+  return {
+    areaSize,
+    areaCords,
+    plantsNumber,
+  };
 };
