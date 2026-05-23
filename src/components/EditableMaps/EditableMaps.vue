@@ -1,5 +1,10 @@
 <template>
   <div class="cmp-editable-maps">
+    <div class="button">
+      <button v-if="editingSelectedArea" @click="saveAreaEdition">
+        Finalizar edição
+      </button>
+    </div>
     <GoogleMap
       ref="googleMap"
       :api-key="VITE_GOOGLE_MAPS_API_KEY"
@@ -14,17 +19,25 @@
 
 <script setup>
 import "./EditableMaps.scss";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { GoogleMap } from "vue3-google-map";
 import { useStore } from "@/store";
 import { getAreasByUser } from "@/services/areas.service";
+import { updateAreaGeometry } from "@/services/areas.service";
 
 const { VITE_GOOGLE_MAPS_API_KEY } = import.meta.env;
 const center = ref({ lat: -23.55052, lng: -46.633308 }); // Localização padrão (São Paulo)
 const googleMap = ref(null);
 let mapInstance = ref(null);
-const { setSelectedArea, setOpenDataEntry } = useStore();
+const {
+  setSelectedArea,
+  setOpenDataEntry,
+  getSelectedArea,
+  getEditingSelectedArea,
+  setEditingSelectedArea,
+} = useStore();
 const polygons = ref([]);
+const editingSelectedArea = computed(() => getEditingSelectedArea());
 
 const props = defineProps({
   focusedArea: Object,
@@ -39,8 +52,25 @@ watch(
     configMaps();
     loadAreas();
   },
-  { immediate: true }
+  { immediate: true },
 );
+
+watch(editingSelectedArea, (isEditing) => {
+  const selectedArea = getSelectedArea();
+
+  polygons.value.forEach(({ polygon, data }) => {
+    const isSelected = data.id === selectedArea?.id;
+
+    polygon.setEditable(isEditing && isSelected);
+    polygon.setDraggable(isEditing && isSelected);
+
+    if (isEditing && isSelected) {
+      setPolygonStyle(polygon, true);
+    } else {
+      setPolygonStyle(polygon, false);
+    }
+  });
+});
 
 watch(
   () => props.focusedArea,
@@ -59,7 +89,7 @@ watch(
         setPolygonStyle(polygon, false);
       }
     });
-  }
+  },
 );
 
 onMounted(() => {
@@ -141,5 +171,29 @@ const setPolygonStyle = (polygon, isActive = false) => {
     fillOpacity: isActive ? 0.5 : 0.3,
     strokeWeight: isActive ? 2 : 1,
   });
+};
+
+const saveAreaEdition = async () => {
+  try {
+    const selectedArea = getSelectedArea();
+
+    const selectedPolygon = polygons.value.find(
+      ({ data }) => data.id === selectedArea?.id,
+    );
+
+    if (!selectedPolygon) return;
+
+    const polygonPath = selectedPolygon.polygon.getPath().getArray();
+
+    await updateAreaGeometry(selectedArea.id, polygonPath);
+
+    selectedPolygon.polygon.setEditable(false);
+    selectedPolygon.polygon.setDraggable(false);
+
+    setEditingSelectedArea(false);
+    window.location.reload();
+  } catch (err) {
+    console.error(err);
+  }
 };
 </script>

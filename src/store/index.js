@@ -11,6 +11,7 @@ const store = createStore({
     openDataEntry: false,
     pendingArea: {},
     selectedArea: {},
+    editingSelectedArea: false,
   },
   mutations: {
     setOpenFieldStats(state, value) {
@@ -24,6 +25,9 @@ const store = createStore({
     },
     setSelectedArea(state, area) {
       state.selectedArea = area;
+    },
+    setEditingSelectedArea(state, value) {
+      state.editingSelectedArea = value;
     },
   },
   actions: {
@@ -64,6 +68,9 @@ const store = createStore({
     getSelectedArea(state) {
       return state.selectedArea;
     },
+    getEditingSelectedArea(state) {
+      return state.editingSelectedArea;
+    },
   },
 });
 
@@ -76,6 +83,9 @@ export const useStore = () => {
   const getPendingArea = () => store.state.pendingArea;
   const setSelectedArea = (area) => store.commit("setSelectedArea", area);
   const getSelectedArea = () => store.state.selectedArea;
+  const setEditingSelectedArea = (value) =>
+    store.commit("setEditingSelectedArea", value);
+  const getEditingSelectedArea = () => store.state.editingSelectedArea;
   const updatePropertyProduction = (propertyId, currentYear) =>
     store.dispatch("updatePropertyProduction", { propertyId, currentYear });
 
@@ -89,6 +99,8 @@ export const useStore = () => {
     setSelectedArea,
     getSelectedArea,
     updatePropertyProduction,
+    setEditingSelectedArea,
+    getEditingSelectedArea,
   };
 };
 
