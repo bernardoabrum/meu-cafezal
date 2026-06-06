@@ -12,7 +12,7 @@
       :zoom="15"
       style="width: 100%; height: 100%"
       map-type-id="hybrid"
-      :libraries="['drawing', 'geometry']"
+      :libraries="['geometry']"
     />
   </div>
 </template>
@@ -121,13 +121,6 @@ const configMaps = () => {
       },
     ],
   });
-
-  const drawingManager = new google.maps.drawing.DrawingManager({
-    drawingMode: null,
-    drawingControl: false,
-  });
-
-  drawingManager.setMap(mapInstance);
 };
 
 const loadAreas = async () => {

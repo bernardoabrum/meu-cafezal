@@ -13,7 +13,7 @@
       :zoom="15"
       style="width: 100%; height: 100%"
       map-type-id="hybrid"
-      :libraries="['drawing', 'geometry']"
+      :libraries="['geometry']"
     />
   </div>
 </template>
