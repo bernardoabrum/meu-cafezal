@@ -20,13 +20,20 @@ import {
 } from "@/components";
 import { useStore } from "@/store";
 
-const { getOpenDataEntry, getOpenFieldStats } = useStore();
+const {
+  getOpenDataEntry,
+  getOpenFieldStats,
+  setOpenDataEntry,
+  setSelectedArea,
+} = useStore();
 
 const focusedArea = ref(null);
 const toggleSidebar = ref(false);
 
 const putFocus = (area) => {
   focusedArea.value = area;
+  setSelectedArea(area);
+  setOpenDataEntry(true);
 };
 
 const openSidebar = (value) => {
