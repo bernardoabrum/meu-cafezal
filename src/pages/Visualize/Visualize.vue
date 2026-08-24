@@ -33,7 +33,9 @@ const toggleSidebar = ref(false);
 const putFocus = (area) => {
   focusedArea.value = area;
   setSelectedArea(area);
-  setOpenDataEntry(true);
+  if (area.areaType === "property") {
+    setOpenDataEntry(true);
+  }
 };
 
 const openSidebar = (value) => {
