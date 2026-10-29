@@ -32,7 +32,7 @@ Ao selecionar uma área azul (Propriedade), você visualiza um modal de informa�
 
 <img width="651" height="431" alt="image" src="https://github.com/user-attachments/assets/824baae3-4d95-43ae-b253-65a8b4c2562e" />
 
-## Tela de estatísticas?
+## Tela de estatísticas
 
 Por fim, temos a tela de estatísticas, que apresenta as informações concentradas de maneira visualmente mais simples filtradas por ano, separadas por propriedades, e também uma média geral da evolução:
 
