@@ -42,11 +42,12 @@ Existe uma tabela de produtividade, que calcula a produtividade da produção po
 
 <img width="1886" height="531" alt="image" src="https://github.com/user-attachments/assets/2d6ce4cb-a94c-436b-ade2-22bc84ac0ce7" />
 
-Por fim, podemos acompanhar a distribuição da produção por talhão, de cada propriedade:
+Ainda nessa tela, podemos acompanhar a distribuição da produção por talhão, de cada propriedade:
 
 <img width="1887" height="642" alt="image" src="https://github.com/user-attachments/assets/bcd19ec3-a655-4358-8a4d-8bd12fcd017c" />
 
+## Conclusão
 
-
+Por fim, agradeço por ter chegado até aqui, e espero que tenha gostado!
 
 
