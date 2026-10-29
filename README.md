@@ -4,7 +4,9 @@ O Meu Cafezal é um sistema de gerenciamento de propriedades rurais focados na p
 
 Este projeto foi criado e apresentado no meu Trabalho de Conclusão de Curso, após, continuei implementando melhorias e funcionalidades, e hoje utilizo para o gerenciamento das propriedades da família.
 
-O projeto é criado com Vue.js, as os dados são armazenados no banco não relacional do firebase (Firestore).
+O projeto é criado com Vue.js, as os dados são armazenados no banco não relacional do firebase (Firestore), e também está disponível como PWA, para ser adicionado ao smartphone como um aplicativo:
+
+<img width="109" height="135" alt="Imagem1" src="https://github.com/user-attachments/assets/5c2a5866-a450-4d3c-b248-7d5e9cfb6864" />
 
 ## Como utilizar?
 
