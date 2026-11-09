@@ -26,7 +26,7 @@ Ao selecionar uma área, você pode ver suas informações anteriormente preench
 
 <img width="692" height="466" alt="image" src="https://github.com/user-attachments/assets/0ec870e9-db11-4649-af55-64fa9dda6ee7" />
 
-Você também pode lançar uma nova quantidade de produção (No café, a colheita é feita ao longo de vários dias, então a ideia é que o usuário possa ir lançando na medida que for colhendo, e isso será somado ou total da produção daquele ano), ou editar as informações, e também pode ver informações das colheitas dos anos passados:
+Você também pode lançar uma nova quantidade de produção (No café, a colheita é feita ao longo de vários dias, então a ideia é que o usuário possa ir lançando na medida que for colhendo, e isso será somado ao total da produção daquele ano), ou editar as informações, e também pode ver informações das colheitas dos anos passados:
 
 <img width="674" height="438" alt="image" src="https://github.com/user-attachments/assets/e30aa664-c5db-425d-b7f2-e2709d09d8e1" />
 
